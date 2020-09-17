@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Алина Николаенко](https://up.htmlacademy.ru/javascript/21/user/857233).
-* Наставник: `Дмитрий Рябинин`.
+* Наставник: [Дмитрий Рябинин](https://htmlacademy.ru/profile/haschish).
 
 ---
 
