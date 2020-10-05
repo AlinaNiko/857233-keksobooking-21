@@ -107,43 +107,34 @@ const createRandomArray = function (array, length) {
 };
 
 
-const generateOffers = function () {
+const generateOffers = function (quantity) {
   const offers = [];
 
-  for (let i = 1; i <= OFFER_NUMBER; i++) {
-    const indexString = `0` + i.toString();
-    const avatarAddress = `img/avatars/user${indexString}.png`;
-    const randomTitle = getRandomArrayItem(OFFER_TITLES);
-    const randomPrice = getRandomInteger(OFFER_PRICE.min, OFFER_PRICE.max);
-    const randomType = getRandomArrayItem(OFFER_TYPES);
-    const randomRooms = getRandomInteger(OFFER_ROOMS.min, OFFER_ROOMS.max);
-    const randomGuest = getRandomInteger(OFFER_GUESTS.min, OFFER_GUESTS.max);
+  for (let i = 1; i <= quantity; i++) {
+    const indexString = i.toString().padStart(2, `0`);
     const randomTime = getRandomArrayItem(OFFER_TIME);
     const randomFeaturesLength = getRandomInteger(1, OFFER_FEATURES.length - 1);
-    const randomFeatures = createRandomArray(OFFER_FEATURES, randomFeaturesLength);
-    const randomDescription = getRandomArrayItem(OFFER_DESCRIPTIONS);
     const randomPhotosLength = getRandomInteger(0, OFFER_PHOTOS.length - 1);
-    const randomPhotos = createRandomArray(OFFER_PHOTOS, randomPhotosLength);
     const randomLocationX = getRandomInteger(OFFER_LOCATION.x.min, OFFER_LOCATION.x.max);
     const randomLocationY = getRandomInteger(OFFER_LOCATION.y.min, OFFER_LOCATION.y.max);
 
     const object = {
       author: {
-        avatar: avatarAddress
+        avatar: `img/avatars/user${indexString}.png`
       },
 
       offer: {
-        title: randomTitle,
+        title: getRandomArrayItem(OFFER_TITLES),
         address: `${randomLocationX}` + `, ` + `${randomLocationY}`,
-        price: randomPrice,
-        type: randomType,
-        rooms: randomRooms,
-        guests: randomGuest,
+        price: getRandomInteger(OFFER_PRICE.min, OFFER_PRICE.max),
+        type: getRandomArrayItem(OFFER_TYPES),
+        rooms: getRandomInteger(OFFER_ROOMS.min, OFFER_ROOMS.max),
+        guests: getRandomInteger(OFFER_GUESTS.min, OFFER_GUESTS.max),
         checkin: randomTime,
         checkout: randomTime,
-        features: randomFeatures,
-        description: randomDescription,
-        photos: randomPhotos
+        features: createRandomArray(OFFER_FEATURES, randomFeaturesLength),
+        description: getRandomArrayItem(OFFER_DESCRIPTIONS),
+        photos: createRandomArray(OFFER_PHOTOS, randomPhotosLength)
       },
 
       location: {
@@ -164,23 +155,11 @@ const pinTemplate = document.querySelector(`#pin`).content;
 const pinButton = pinTemplate.querySelector(`.map__pin`);
 const pinContainer = document.querySelector(`.map__pins`);
 
-// const pinForSize = document.querySelector(`.map__pin`);
-// pinForSize.classList.remove(`map__pin--main`);
-// const pinWidth = pinForSize.offsetWidth;
-// const pinHeight = pinForSize.offsetHeight;
-// pinForSize.classList.add(`map__pin--main`);
-
 const createPinButton = function (object) {
   const pin = pinButton.cloneNode(true);
   const pinImage = pin.querySelector(`img`);
-  // const pinWidth = pin.offsetWidth;
-  // const pinHeight = pin.offsetHeight;
-  // const pinLocationX = Math.round(object.location.x - pinWidth / 2);
-  // const pinLocationY = Math.round(object.location.y - pinHeight);
-  const pinLocationX = object.location.x;
-  const pinLocationY = object.location.y;
-  pin.style.left = `${pinLocationX}px`;
-  pin.style.top = `${pinLocationY}px`;
+  pin.style.left = `${object.location.x}px`;
+  pin.style.top = `${object.location.y}px`;
   pin.style.transform = `translate(-50%, -100%)`;
   pinImage.src = object.author.avatar;
   pinImage.alt = object.offer.title;
@@ -200,5 +179,5 @@ const renderPinButton = function (array) {
   pinContainer.appendChild(fragment);
 };
 
-const offers = generateOffers();
+const offers = generateOffers(OFFER_NUMBER);
 renderPinButton(offers);
