@@ -113,7 +113,7 @@ const generateOffers = function (quantity) {
   for (let i = 1; i <= quantity; i++) {
     const indexString = i.toString().padStart(2, `0`);
     const randomTime = getRandomArrayItem(OFFER_TIME);
-    const randomFeaturesLength = getRandomInteger(1, OFFER_FEATURES.length - 1);
+    const randomFeaturesLength = getRandomInteger(0, OFFER_FEATURES.length - 1);
     const randomPhotosLength = getRandomInteger(0, OFFER_PHOTOS.length - 1);
     const randomLocationX = getRandomInteger(OFFER_LOCATION.x.min, OFFER_LOCATION.x.max);
     const randomLocationY = getRandomInteger(OFFER_LOCATION.y.min, OFFER_LOCATION.y.max);
@@ -181,3 +181,94 @@ const renderPinButton = function (array) {
 
 const offers = generateOffers(OFFER_NUMBER);
 renderPinButton(offers);
+
+
+const pinCardTemplate = document.querySelector(`#card`).content;
+const pinCard = pinCardTemplate.querySelector(`.map__card`);
+const pinCardContainer = document.querySelector(`.map`);
+const pinCardNeighbor = pinCardContainer.querySelector(`.map__filters-container`);
+
+const createPinCard = function (object) {
+  const card = pinCard.cloneNode(true);
+  const cardFeatures = card.querySelectorAll(`.popup__feature`);
+  const offerType = function () {
+    if (object.offer.type === `palace`) {
+      return `Дворец`;
+    } else if (object.offer.type === `flat`) {
+      return `Квартира`;
+    } else if (object.offer.type === `house`) {
+      return `Дом`;
+    } else {
+      return `Бунгало`;
+    }
+  };
+
+  const getPluralRoomNoun = function (number) {
+    if (number % 10 === 1 && number % 10 !== 11) {
+      return `${number} комната`;
+    } else if (number % 10 >= 2 && number % 10 <= 4 && (number % 100 < 10 || number % 100 >= 20)) {
+      return `${number} комнаты`;
+    } else {
+      return `${number} комнат`;
+    }
+  };
+
+  const getPluralGuestNoun = function (number) {
+    if (number % 10 === 1 && number % 10 !== 11) {
+      return `${number} гостя`;
+    } else {
+      return `${number} гостей`;
+    }
+  };
+
+  card.querySelector(`.popup__title`).textContent = object.offer.title;
+  card.querySelector(`.popup__text--address`).textContent = object.offer.address;
+  card.querySelector(`.popup__text--price`).textContent = `${object.offer.price}₽/ночь`;
+  card.querySelector(`.popup__type`).textContent = offerType();
+  card.querySelector(`.popup__text--capacity`).textContent = `${getPluralRoomNoun(object.offer.rooms)} для ${getPluralGuestNoun(object.offer.guests)}`;
+  card.querySelector(`.popup__text--time`).textContent = `Заезд после ${object.offer.checkin}, выезд до ${object.offer.checkout}`;
+
+  if (object.offer.features.length > 0) {
+    for (let feature of object.offer.features) {
+      card.querySelector(`.popup__feature--${feature}`).textContent = feature;
+    }
+    for (let cardFeature of cardFeatures) {
+      if (cardFeature.textContent === ``) {
+        cardFeature.classList.add(`hidden`);
+      }
+    }
+  } else {
+    card.querySelector(`.popup__features`).classList.add(`hidden`);
+  }
+
+  card.querySelector(`.popup__description`).textContent = object.offer.description;
+
+  if (object.offer.photos.length > 0) {
+    const cardPhoto = card.querySelector(`.popup__photo`);
+    const cardPhotoContainer = card.querySelector(`.popup__photos`);
+    cardPhotoContainer.removeChild(cardPhoto);
+    const fragment = document.createDocumentFragment();
+    for (let photo of object.offer.photos) {
+      const cardPhotoClone = cardPhoto.cloneNode(true);
+      cardPhotoClone.src = photo;
+      fragment.appendChild(cardPhotoClone);
+    }
+    cardPhotoContainer.appendChild(fragment);
+  } else {
+    card.querySelector(`.popup__photos`).classList.add(`hidden`);
+  }
+
+  card.querySelector(`.popup__avatar`).src = object.author.avatar;
+
+  return card;
+};
+
+const renderPinCard = function (array) {
+  const fragment = document.createDocumentFragment();
+  const readyPinCard = createPinCard(array[0]);
+  fragment.appendChild(readyPinCard);
+
+  pinCardContainer.insertBefore(fragment, pinCardNeighbor);
+};
+
+renderPinCard(offers);
