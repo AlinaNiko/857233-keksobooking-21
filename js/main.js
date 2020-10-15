@@ -188,57 +188,54 @@ const pinCard = pinCardTemplate.querySelector(`.map__card`);
 const pinCardContainer = document.querySelector(`.map`);
 const pinCardNeighbor = pinCardContainer.querySelector(`.map__filters-container`);
 
+const offerType = function (objectType) {
+  if (objectType === `palace`) {
+    return `Дворец`;
+  } else if (objectType === `flat`) {
+    return `Квартира`;
+  } else if (objectType === `house`) {
+    return `Дом`;
+  } else {
+    return `Бунгало`;
+  }
+};
+
+const getPluralRoomNoun = function (number) {
+  if (number % 10 === 1 && number % 100 !== 11) {
+    return `${number} комната`;
+  } else if (number % 10 >= 2 && number % 10 <= 4 && (number % 100 < 10 || number % 100 >= 20)) {
+    return `${number} комнаты`;
+  } else {
+    return `${number} комнат`;
+  }
+};
+
+const getPluralGuestNoun = function (number) {
+  if (number % 10 === 1 && number % 100 !== 11) {
+    return `${number} гостя`;
+  } else {
+    return `${number} гостей`;
+  }
+};
+
 const createPinCard = function (object) {
   const card = pinCard.cloneNode(true);
-  const cardFeatures = card.querySelectorAll(`.popup__feature`);
-  const offerType = function () {
-    if (object.offer.type === `palace`) {
-      return `Дворец`;
-    } else if (object.offer.type === `flat`) {
-      return `Квартира`;
-    } else if (object.offer.type === `house`) {
-      return `Дом`;
-    } else {
-      return `Бунгало`;
-    }
-  };
-
-  const getPluralRoomNoun = function (number) {
-    if (number % 10 === 1 && number % 10 !== 11) {
-      return `${number} комната`;
-    } else if (number % 10 >= 2 && number % 10 <= 4 && (number % 100 < 10 || number % 100 >= 20)) {
-      return `${number} комнаты`;
-    } else {
-      return `${number} комнат`;
-    }
-  };
-
-  const getPluralGuestNoun = function (number) {
-    if (number % 10 === 1 && number % 10 !== 11) {
-      return `${number} гостя`;
-    } else {
-      return `${number} гостей`;
-    }
-  };
-
+  const cardFeatures = card.querySelector(`.popup__features`);
   card.querySelector(`.popup__title`).textContent = object.offer.title;
   card.querySelector(`.popup__text--address`).textContent = object.offer.address;
   card.querySelector(`.popup__text--price`).textContent = `${object.offer.price}₽/ночь`;
-  card.querySelector(`.popup__type`).textContent = offerType();
+  card.querySelector(`.popup__type`).textContent = offerType(object.offer.type);
   card.querySelector(`.popup__text--capacity`).textContent = `${getPluralRoomNoun(object.offer.rooms)} для ${getPluralGuestNoun(object.offer.guests)}`;
   card.querySelector(`.popup__text--time`).textContent = `Заезд после ${object.offer.checkin}, выезд до ${object.offer.checkout}`;
 
   if (object.offer.features.length > 0) {
-    for (let feature of object.offer.features) {
-      card.querySelector(`.popup__feature--${feature}`).textContent = feature;
-    }
-    for (let cardFeature of cardFeatures) {
-      if (cardFeature.textContent === ``) {
-        cardFeature.classList.add(`hidden`);
-      }
+    cardFeatures.innerHTML = ``;
+    for (let i = 0; i < object.offer.features.length; i++) {
+      const feature = object.offer.features[i];
+      cardFeatures.innerHTML += `<li class="popup__feature popup__feature--${feature}">${feature}</li>`;
     }
   } else {
-    card.querySelector(`.popup__features`).classList.add(`hidden`);
+    cardFeatures.classList.add(`hidden`);
   }
 
   card.querySelector(`.popup__description`).textContent = object.offer.description;
@@ -247,6 +244,7 @@ const createPinCard = function (object) {
     const cardPhoto = card.querySelector(`.popup__photo`);
     const cardPhotoContainer = card.querySelector(`.popup__photos`);
     cardPhotoContainer.removeChild(cardPhoto);
+
     const fragment = document.createDocumentFragment();
     for (let photo of object.offer.photos) {
       const cardPhotoClone = cardPhoto.cloneNode(true);
@@ -263,12 +261,13 @@ const createPinCard = function (object) {
   return card;
 };
 
-const renderPinCard = function (array) {
+const renderPinCard = function (object) {
   const fragment = document.createDocumentFragment();
-  const readyPinCard = createPinCard(array[0]);
+  const readyPinCard = createPinCard(object);
   fragment.appendChild(readyPinCard);
 
   pinCardContainer.insertBefore(fragment, pinCardNeighbor);
 };
 
-renderPinCard(offers);
+renderPinCard(offers[0]);
+
