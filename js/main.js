@@ -185,8 +185,8 @@ renderPinButton(offers);
 
 const pinCardTemplate = document.querySelector(`#card`).content;
 const pinCard = pinCardTemplate.querySelector(`.map__card`);
-const pinCardContainer = document.querySelector(`.map`);
-const pinCardNeighbor = pinCardContainer.querySelector(`.map__filters-container`);
+const map = document.querySelector(`.map`);
+const pinCardNeighbor = map.querySelector(`.map__filters-container`);
 
 const offerType = function (objectType) {
   if (objectType === `palace`) {
@@ -200,10 +200,13 @@ const offerType = function (objectType) {
   }
 };
 
+
 const getPluralRoomNoun = function (number) {
-  if (number % 10 === 1 && number % 100 !== 11) {
+  const remainderOfTen = number % 10;
+  const remainderOfHundred = number % 100;
+  if (remainderOfTen === 1 && remainderOfHundred !== 11) {
     return `${number} комната`;
-  } else if (number % 10 >= 2 && number % 10 <= 4 && (number % 100 < 10 || number % 100 >= 20)) {
+  } else if (remainderOfTen >= 2 && remainderOfTen <= 4 && (remainderOfHundred < 10 || remainderOfHundred >= 20)) {
     return `${number} комнаты`;
   } else {
     return `${number} комнат`;
@@ -211,7 +214,9 @@ const getPluralRoomNoun = function (number) {
 };
 
 const getPluralGuestNoun = function (number) {
-  if (number % 10 === 1 && number % 100 !== 11) {
+  const remainderOfTen = number % 10;
+  const remainderOfHundred = number % 100;
+  if (remainderOfTen === 1 && remainderOfHundred !== 11) {
     return `${number} гостя`;
   } else {
     return `${number} гостей`;
@@ -229,11 +234,12 @@ const createPinCard = function (object) {
   card.querySelector(`.popup__text--time`).textContent = `Заезд после ${object.offer.checkin}, выезд до ${object.offer.checkout}`;
 
   if (object.offer.features.length > 0) {
-    cardFeatures.innerHTML = ``;
+    let newFeatureItems = ``;
     for (let i = 0; i < object.offer.features.length; i++) {
       const feature = object.offer.features[i];
-      cardFeatures.innerHTML += `<li class="popup__feature popup__feature--${feature}">${feature}</li>`;
+      newFeatureItems += `<li class="popup__feature popup__feature--${feature}"></li>`;
     }
+    cardFeatures.innerHTML = newFeatureItems;
   } else {
     cardFeatures.classList.add(`hidden`);
   }
@@ -262,11 +268,8 @@ const createPinCard = function (object) {
 };
 
 const renderPinCard = function (object) {
-  const fragment = document.createDocumentFragment();
   const readyPinCard = createPinCard(object);
-  fragment.appendChild(readyPinCard);
-
-  pinCardContainer.insertBefore(fragment, pinCardNeighbor);
+  map.insertBefore(readyPinCard, pinCardNeighbor);
 };
 
 renderPinCard(offers[0]);
