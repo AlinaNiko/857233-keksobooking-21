@@ -226,6 +226,7 @@ const getPluralGuestNoun = function (number) {
 const createPinCard = function (object) {
   const card = pinCard.cloneNode(true);
   const cardFeatures = card.querySelector(`.popup__features`);
+  const cardPhotos = card.querySelector(`.popup__photos`);
   card.querySelector(`.popup__title`).textContent = object.offer.title;
   card.querySelector(`.popup__text--address`).textContent = object.offer.address;
   card.querySelector(`.popup__text--price`).textContent = `${object.offer.price}₽/ночь`;
@@ -247,17 +248,12 @@ const createPinCard = function (object) {
   card.querySelector(`.popup__description`).textContent = object.offer.description;
 
   if (object.offer.photos.length > 0) {
-    const cardPhoto = card.querySelector(`.popup__photo`);
-    const cardPhotoContainer = card.querySelector(`.popup__photos`);
-    cardPhotoContainer.removeChild(cardPhoto);
-
-    const fragment = document.createDocumentFragment();
-    for (let photo of object.offer.photos) {
-      const cardPhotoClone = cardPhoto.cloneNode(true);
-      cardPhotoClone.src = photo;
-      fragment.appendChild(cardPhotoClone);
+    let newPhotoItems = ``;
+    for (let i = 0; i < object.offer.photos.length; i++) {
+      const photoSrc = object.offer.photos[i];
+      newPhotoItems += `<img src="${photoSrc}" class="popup__photo" width="45" height="40" alt="Фотография жилья">`;
     }
-    cardPhotoContainer.appendChild(fragment);
+    cardPhotos.innerHTML = newPhotoItems;
   } else {
     card.querySelector(`.popup__photos`).classList.add(`hidden`);
   }
@@ -273,4 +269,3 @@ const renderPinCard = function (object) {
 };
 
 renderPinCard(offers[0]);
-
