@@ -268,13 +268,11 @@ const offers = generateOffers(OFFER_NUMBER);
 
 
 const adForm = document.querySelector(`.ad-form`);
-const adFormChildren = adForm.children;
 const mapFilters = map.querySelector(`.map__filters`);
-const mapFiltersChildren = mapFilters.children;
 const mainPin = map.querySelector(`.map__pin--main`);
 const adFormAddress = adForm.querySelector(`#address`);
 
-adForm.setAttribute(`action`, `https://21.javascript.pages.academy/keksobooking`);
+adForm.action = `https://21.javascript.pages.academy/keksobooking`;
 
 const getPosition = function (element, relativeParent) {
   const coordinates = element.getBoundingClientRect();
@@ -299,15 +297,18 @@ const mainPinPosition = {
   left: Math.round(getPosition(mainPin, map).left + mainPin.clientWidth / 2)
 };
 
+const setChildrenDisabled = function (element, boolean) {
+  const children = element.children;
+  for (let child of children) {
+    child.disabled = boolean;
+  }
+};
+
 const switchOffActive = function () {
   map.classList.add(`map--faded`);
   adForm.classList.add(`ad-form--disabled`);
-  for (let child of adFormChildren) {
-    child.setAttribute(`disabled`, ``);
-  }
-  for (let child of mapFiltersChildren) {
-    child.setAttribute(`disabled`, ``);
-  }
+  setChildrenDisabled(adForm, true);
+  setChildrenDisabled(mapFilters, true);
 
   adFormAddress.value = `${mainPinCenterPosition.left}, ${mainPinCenterPosition.top}`;
 };
@@ -315,12 +316,8 @@ const switchOffActive = function () {
 const switchOnActive = function () {
   map.classList.remove(`map--faded`);
   adForm.classList.remove(`ad-form--disabled`);
-  for (let child of adFormChildren) {
-    child.removeAttribute(`disabled`);
-  }
-  for (let child of mapFiltersChildren) {
-    child.removeAttribute(`disabled`);
-  }
+  setChildrenDisabled(adForm, false);
+  setChildrenDisabled(mapFilters, false);
 
   adFormAddress.value = `${mainPinPosition.left}, ${mainPinPosition.top}`;
 };
@@ -354,7 +351,7 @@ const roomNumberField = adForm.querySelector(`#room_number`);
 const capacityField = adForm.querySelector(`#capacity`);
 
 for (let fileField of fileFields) {
-  fileField.setAttribute(`accept`, `image/png, image/jpeg`);
+  fileField.accept = `image/png, image/jpeg`;
 }
 
 adFormAddress.setAttribute(`readonly`, ``);
@@ -378,40 +375,34 @@ priceField.setAttribute(`required`, ``);
 priceField.setAttribute(`max`, `1000000`);
 
 const setPriceValue = function () {
+  let value;
   if (typeField.value === `bungalow`) {
-    priceField.setAttribute(`min`, `0`);
-    priceField.setAttribute(`placeholder`, `0`);
+    value = 0;
   } else if (typeField.value === `flat`) {
-    priceField.setAttribute(`min`, `1000`);
-    priceField.setAttribute(`placeholder`, `1000`);
+    value = 1000;
   } else if (typeField.value === `house`) {
-    priceField.setAttribute(`min`, `5000`);
-    priceField.setAttribute(`placeholder`, `5000`);
+    value = 5000;
   } else {
-    priceField.setAttribute(`min`, `10000`);
-    priceField.setAttribute(`placeholder`, `10000`);
+    value = 10000;
   }
+  priceField.min = value;
+  priceField.placeholder = value;
 };
 
 const setPriceValidation = function () {
+  let message = ``;
   if (priceField.validity.valueMissing) {
-    priceField.setCustomValidity(`Укажите цену`);
+    message = `Укажите цену`;
   } else if (priceField.validity.rangeOverflow) {
-    priceField.setCustomValidity(`Максимальная цена за ночь ${priceField.getAttribute(`max`)} руб.`);
-  } else if (typeField.value === `bungalow` && priceField.validity.rangeUnderflow) {
-    priceField.setCustomValidity(`Минимальная цена за Бунгало ${priceField.getAttribute(`min`)} руб.`);
-  } else if (typeField.value === `flat` && priceField.validity.rangeUnderflow) {
-    priceField.setCustomValidity(`Минимальная цена за Квартиру ${priceField.getAttribute(`min`)} руб.`);
-  } else if (typeField.value === `house` && priceField.validity.rangeUnderflow) {
-    priceField.setCustomValidity(`Минимальная цена за Дом ${priceField.getAttribute(`min`)} руб.`);
-  } else if (typeField.value === `palace` && priceField.validity.rangeUnderflow) {
-    priceField.setCustomValidity(`Минимальная цена за Дворец ${priceField.getAttribute(`min`)} руб.`);
+    message = `Максимальная цена за ночь ${priceField.getAttribute(`max`)} руб.`;
+  } else if (priceField.validity.rangeUnderflow) {
+    message = `Минимальная цена за ночь ${priceField.getAttribute(`min`)} руб.`;
   } else {
-    priceField.setCustomValidity(``);
+    message = ``;
   }
+  priceField.setCustomValidity(message);
   priceField.reportValidity();
 };
-
 
 setPriceValue();
 
@@ -424,31 +415,14 @@ priceField.addEventListener(`input`, function () {
   setPriceValidation();
 });
 
-
-const setTimeInAndTimeOut = function (select, anotherSelect) {
-  if (Number(select.value) !== Number(anotherSelect.value)) {
-    anotherSelect.value = select.value;
-  }
-};
-
 timeInField.addEventListener(`change`, function () {
-  setTimeInAndTimeOut(timeInField, timeOutField);
+  timeOutField.value = timeInField.value;
 });
 
 timeOutField.addEventListener(`change`, function () {
-  setTimeInAndTimeOut(timeOutField, timeInField);
+  timeInField.value = timeOutField.value;
 });
 
-
-if (capacityField.value !== roomNumberField.value) {
-  const options = capacityField.options;
-  for (let option of options) {
-    option.removeAttribute(`selected`);
-    if (option.value === roomNumberField.value) {
-      option.setAttribute(`selected`, ``);
-    }
-  }
-}
 
 const getErrorMessage = function (roomsField, guestsField) {
   const rooms = Number(roomsField.value);
@@ -471,6 +445,8 @@ roomNumberField.addEventListener(`change`, function () {
   roomNumberField.reportValidity();
 });
 
+capacityField.setCustomValidity(getErrorMessage(roomNumberField, capacityField));
+
 capacityField.addEventListener(`change`, function () {
   roomNumberField.setCustomValidity(``);
   capacityField.setCustomValidity(``);
@@ -483,11 +459,9 @@ const resetButton = adForm.querySelector(`.ad-form__reset`);
 resetButton.addEventListener(`click`, function (evt) {
   evt.preventDefault();
   adForm.reset();
-  const mapPins = map.querySelectorAll(`.map__pin`);
+  const mapPins = map.querySelectorAll(`.map__pin:not(.map__pin--main)`);
   for (let pin of mapPins) {
-    if (!pin.classList.contains(`map__pin--main`)) {
-      pin.remove();
-    }
+    pin.remove();
   }
   switchOffActive();
 });
