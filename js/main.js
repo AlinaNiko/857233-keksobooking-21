@@ -459,20 +459,30 @@ const createPinCard = function (object) {
 
   const popupCloseButton = card.querySelector(`.popup__close`);
   popupCloseButton.addEventListener(`click`, function () {
-    card.remove();
-  });
-  document.addEventListener(`keydown`, function (evt) {
-    if (evt.key === `Escape`) {
-      card.remove();
-    }
+    closePinCard();
   });
 
   return card;
 };
 
+const closePinCard = function () {
+  const card = document.querySelector(`.map__card`);
+  if (card) {
+    card.remove();
+    document.removeEventListener(`keydown`, onDocumentKeydown);
+  }
+};
+
+const onDocumentKeydown = function (evt) {
+  if (evt.key === `Escape`) {
+    closePinCard();
+  }
+};
+
 const renderPinCard = function (object) {
   const readyPinCard = createPinCard(object);
   map.insertBefore(readyPinCard, pinCardNeighbor);
+  document.addEventListener(`keydown`, onDocumentKeydown);
 };
 
 pinContainer.addEventListener(`click`, function (evt) {
@@ -481,10 +491,7 @@ pinContainer.addEventListener(`click`, function (evt) {
     return;
   }
 
-  const popup = document.querySelector(`.popup`);
-  if (popup) {
-    popup.remove();
-  }
+  closePinCard();
 
   const eventTargetIndex = eventTarget.dataset.index;
   renderPinCard(offers[eventTargetIndex]);
