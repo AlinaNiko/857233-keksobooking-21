@@ -1,10 +1,9 @@
 "use strict";
 
 (function () {
-
-  const pinCardTemplate = document.querySelector(`#card`).content;
-  const pinCard = pinCardTemplate.querySelector(`.map__card`);
-  const pinCardNeighbor = window.main.map.querySelector(`.map__filters-container`);
+  const map = document.querySelector(`.map`);
+  const template = document.querySelector(`#card`).content.querySelector(`.map__card`);
+  const neighbor = map.querySelector(`.map__filters-container`);
 
   const offerType = function (objectType) {
     if (objectType === `palace`) {
@@ -40,10 +39,10 @@
     }
   };
 
-  const createPinCard = function (object) {
-    const card = pinCard.cloneNode(true);
-    const cardFeatures = card.querySelector(`.popup__features`);
-    const cardPhotos = card.querySelector(`.popup__photos`);
+  const create = function (object) {
+    const card = template.cloneNode(true);
+    const features = card.querySelector(`.popup__features`);
+    const photos = card.querySelector(`.popup__photos`);
     card.querySelector(`.popup__title`).textContent = object.offer.title;
     card.querySelector(`.popup__text--address`).textContent = object.offer.address;
     card.querySelector(`.popup__text--price`).textContent = `${object.offer.price}₽/ночь`;
@@ -57,9 +56,9 @@
         const feature = object.offer.features[i];
         newFeatureItems += `<li class="popup__feature popup__feature--${feature}"></li>`;
       }
-      cardFeatures.innerHTML = newFeatureItems;
+      features.innerHTML = newFeatureItems;
     } else {
-      cardFeatures.classList.add(`hidden`);
+      features.classList.add(`hidden`);
     }
 
     card.querySelector(`.popup__description`).textContent = object.offer.description;
@@ -70,7 +69,7 @@
         const photoSrc = object.offer.photos[i];
         newPhotoItems += `<img src="${photoSrc}" class="popup__photo" width="45" height="40" alt="Фотография жилья">`;
       }
-      cardPhotos.innerHTML = newPhotoItems;
+      photos.innerHTML = newPhotoItems;
     } else {
       card.querySelector(`.popup__photos`).classList.add(`hidden`);
     }
@@ -79,7 +78,7 @@
 
     const popupCloseButton = card.querySelector(`.popup__close`);
     popupCloseButton.addEventListener(`click`, function () {
-      closePinCard();
+      close();
     });
 
     return card;
@@ -87,12 +86,17 @@
 
   const onDocumentKeydown = function (evt) {
     if (evt.key === `Escape`) {
-      closePinCard();
+      close();
     }
   };
 
-  const closePinCard = function () {
-    const card = document.querySelector(`.map__card`);
+  const open = function (object) {
+    map.insertBefore(create(object), neighbor);
+    document.addEventListener(`keydown`, onDocumentKeydown);
+  };
+
+  const close = function () {
+    const card = map.querySelector(`.map__card`);
     if (card) {
       card.remove();
       document.removeEventListener(`keydown`, onDocumentKeydown);
@@ -100,9 +104,8 @@
   };
 
   window.card = {
-    pinCardNeighbor,
-    onDocumentKeydown,
-    createPinCard,
-    closePinCard
+    create,
+    open,
+    close
   };
 })();

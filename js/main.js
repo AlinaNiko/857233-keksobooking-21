@@ -1,8 +1,6 @@
 "use strict";
 
 (function () {
-  const map = document.querySelector(`.map`);
-
   const getRandomInteger = function (min, max) {
     const randomNumber = min + Math.random() * (max + 1 - min);
     return Math.floor(randomNumber);
@@ -42,12 +40,18 @@
     return position;
   };
 
+  const setChildrenDisabled = function (element, boolean) {
+    const children = element.children;
+    for (let child of children) {
+      child.disabled = boolean;
+    }
+  };
+
   window.main = {
-    map,
     getRandomInteger,
     getRandomArrayItem,
     createRandomArray,
-    getPosition
+    getPosition,
+    setChildrenDisabled
   };
-
 })();

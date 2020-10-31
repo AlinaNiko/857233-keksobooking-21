@@ -70,7 +70,7 @@
   const OFFER_LOCATION = {
     x: {
       min: 0,
-      max: window.main.map.clientWidth
+      max: document.querySelector(`.map`).clientWidth
     },
 
     y: {
