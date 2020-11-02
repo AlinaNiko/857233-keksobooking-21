@@ -27,11 +27,11 @@
     return result;
   };
 
-  const getPosition = function (element, relativeParent) {
+  const getPosition = function (element, parent) {
     const coordinates = element.getBoundingClientRect();
-    const relativeCoordinates = relativeParent.getBoundingClientRect();
-    const top = coordinates.top - relativeCoordinates.top;
-    const left = coordinates.left - relativeCoordinates.left;
+    const parentCoordinates = parent.getBoundingClientRect();
+    const top = coordinates.top - parentCoordinates.top;
+    const left = coordinates.left - parentCoordinates.left;
     const position = {
       top,
       left

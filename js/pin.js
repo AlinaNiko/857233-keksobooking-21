@@ -3,13 +3,20 @@
 (function () {
   const template = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   const map = document.querySelector(`.map`);
+  const adForm = document.querySelector(`.ad-form`);
   const pins = map.querySelector(`.map__pins`);
   const main = map.querySelector(`.map__pin--main`);
-
-  const mainPosition = {
-    top: Math.round(window.main.getPosition(main, map).top + main.clientHeight),
-    left: Math.round(window.main.getPosition(main, map).left + main.clientWidth / 2)
+  const MAP_BORDERS = {
+    top: 130 - main.clientHeight,
+    bottom: 630 - main.clientHeight,
+    left: 0 - main.clientWidth / 2,
+    right: map.clientWidth - main.clientWidth / 2
   };
+
+  // let mainPosition = {
+  //   top: Math.round(window.main.getPosition(main, map).top + main.clientHeight),
+  //   left: Math.round(window.main.getPosition(main, map).left + main.clientWidth / 2)
+  // };
 
   const mainCenterPosition = {
     top: Math.round(window.main.getPosition(main, map).top + main.clientHeight / 2),
@@ -58,8 +65,76 @@
     });
   };
 
+  const setPosition = function (evt, coords) {
+    evt.preventDefault();
+    const shift = {
+      x: coords.x - evt.clientX,
+      y: coords.y - evt.clientY
+    };
+
+    coords.x = evt.clientX;
+    coords.y = evt.clientY;
+
+    let mainTopPosition = window.main.getPosition(main, map).top - shift.y;
+    let mainLeftPosition = window.main.getPosition(main, map).left - shift.x;
+
+    if (mainTopPosition <= MAP_BORDERS.top) {
+      mainTopPosition = MAP_BORDERS.top;
+    }
+    if (mainTopPosition >= MAP_BORDERS.bottom) {
+      mainTopPosition = MAP_BORDERS.bottom;
+    }
+
+    if (mainLeftPosition <= MAP_BORDERS.left) {
+      mainLeftPosition = MAP_BORDERS.left;
+    }
+    if (mainLeftPosition >= MAP_BORDERS.right) {
+      mainLeftPosition = MAP_BORDERS.right;
+    }
+    main.style.top = `${mainTopPosition}px`;
+    main.style.left = `${mainLeftPosition}px`;
+
+    const mainPosition = {
+      top: Math.round(mainTopPosition + main.clientHeight),
+      left: Math.round(mainLeftPosition + main.clientWidth / 2)
+    };
+    adForm.querySelector(`#address`).value = `${mainPosition.left}, ${mainPosition.top}`;
+  };
+
+
+  main.addEventListener(`mousedown`, function (evt) {
+    evt.preventDefault();
+
+    let startCoordinates = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+
+    const onMouseMove = function (moveEvt) {
+      setPosition(moveEvt, startCoordinates);
+    };
+
+    const onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+      setPosition(upEvt, startCoordinates);
+      map.removeEventListener(`mousemove`, onMouseMove);
+      map.removeEventListener(`mouseup`, onMouseUp);
+    };
+
+    const onMouseLeave = function (leaveEvt) {
+      leaveEvt.preventDefault();
+      map.removeEventListener(`mousemove`, onMouseMove);
+      map.removeEventListener(`mouseup`, onMouseUp);
+    };
+
+    map.addEventListener(`mousemove`, onMouseMove);
+    map.addEventListener(`mouseup`, onMouseUp);
+    map.addEventListener(`mouseleave`, onMouseLeave);
+  });
+
   window.pin = {
-    mainPosition,
+    // mainPosition,
     mainCenterPosition,
     create,
     show,

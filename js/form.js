@@ -133,7 +133,7 @@
   const enable = function () {
     adForm.classList.remove(`ad-form--disabled`);
     window.main.setChildrenDisabled(adForm, false);
-    address.value = `${window.pin.mainPosition.left}, ${window.pin.mainPosition.top}`;
+    // address.value = `${window.pin.mainPosition.left}, ${window.pin.mainPosition.top}`;
   };
 
   const disable = function () {
