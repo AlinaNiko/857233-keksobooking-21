@@ -2,6 +2,7 @@
 
 (function () {
   const switchOffActive = function () {
+    window.pin.setMainCenter();
     window.map.disable();
     window.form.disable();
   };
@@ -15,7 +16,7 @@
     switchOffActive();
   });
 
-  window.pin.onMainMouseDown(switchOnActive);
+  window.pin.onMainMouseDown(switchOnActive, window.form.setAddress);
   window.pin.onMainKeyDown(switchOnActive);
 
   window.form.reset(switchOffActive);

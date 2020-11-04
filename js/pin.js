@@ -3,24 +3,28 @@
 (function () {
   const template = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   const map = document.querySelector(`.map`);
-  const adForm = document.querySelector(`.ad-form`);
-  const pins = map.querySelector(`.map__pins`);
+  const container = map.querySelector(`.map__pins`);
   const main = map.querySelector(`.map__pin--main`);
-  const MAP_BORDERS = {
-    top: 130 - main.clientHeight,
-    bottom: 630 - main.clientHeight,
-    left: 0 - main.clientWidth / 2,
-    right: map.clientWidth - main.clientWidth / 2
+  const MAIN_SIZE = {
+    width: 62,
+    height: 84
   };
 
-  // let mainPosition = {
-  //   top: Math.round(window.main.getPosition(main, map).top + main.clientHeight),
-  //   left: Math.round(window.main.getPosition(main, map).left + main.clientWidth / 2)
-  // };
+  const MAP_BORDERS = {
+    top: 130 - MAIN_SIZE.height,
+    bottom: 630 - MAIN_SIZE.height,
+    left: 0 - MAIN_SIZE.width / 2,
+    right: map.clientWidth - MAIN_SIZE.width / 2
+  };
 
   const mainCenterPosition = {
-    top: Math.round(window.main.getPosition(main, map).top + main.clientHeight / 2),
-    left: Math.round(window.main.getPosition(main, map).left + main.clientWidth / 2)
+    top: Math.round(window.main.getPosition(main).top),
+    left: Math.round(window.main.getPosition(main).left)
+  };
+
+  const mainCenterCoordinates = {
+    top: Math.round(window.main.getPosition(main).top + main.clientHeight / 2),
+    left: Math.round(window.main.getPosition(main).left + main.clientWidth / 2)
   };
 
   const create = function (object) {
@@ -44,28 +48,31 @@
       fragment.appendChild(readyPin);
     }
 
-    pins.appendChild(fragment);
+    container.appendChild(fragment);
   };
 
-  const onMainMouseDown = function (switchOn) {
-    main.addEventListener(`mousedown`, function (evt) {
-      if (evt.button === 0) {
-        switchOn();
-        show(window.data.offers);
-      }
-    });
+  const hide = function () {
+    const pins = container.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+    for (let pin of pins) {
+      pin.remove();
+    }
+  };
+
+  const setMainCenter = function () {
+    main.style.top = `${mainCenterPosition.top}px`;
+    main.style.left = `${mainCenterPosition.left}px`;
   };
 
   const onMainKeyDown = function (switchOn) {
     main.addEventListener(`keydown`, function (evt) {
       if (evt.key === `Enter`) {
         switchOn();
-        window.pin.show(window.data.offers);
+        show(window.data.offers);
       }
     });
   };
 
-  const setPosition = function (evt, coords) {
+  const setPosition = function (evt, coords, setCoords) {
     evt.preventDefault();
     const shift = {
       x: coords.x - evt.clientX,
@@ -75,8 +82,8 @@
     coords.x = evt.clientX;
     coords.y = evt.clientY;
 
-    let mainTopPosition = window.main.getPosition(main, map).top - shift.y;
-    let mainLeftPosition = window.main.getPosition(main, map).left - shift.x;
+    let mainTopPosition = window.main.getPosition(main).top - shift.y;
+    let mainLeftPosition = window.main.getPosition(main).left - shift.x;
 
     if (mainTopPosition <= MAP_BORDERS.top) {
       mainTopPosition = MAP_BORDERS.top;
@@ -95,49 +102,47 @@
     main.style.left = `${mainLeftPosition}px`;
 
     const mainPosition = {
-      top: Math.round(mainTopPosition + main.clientHeight),
-      left: Math.round(mainLeftPosition + main.clientWidth / 2)
+      top: Math.round(mainTopPosition + MAIN_SIZE.height),
+      left: Math.round(mainLeftPosition + MAIN_SIZE.width / 2)
     };
-    adForm.querySelector(`#address`).value = `${mainPosition.left}, ${mainPosition.top}`;
+    setCoords(mainPosition.left, mainPosition.top);
   };
 
+  const onMainMouseDown = function (switchOn, setAddress) {
+    main.addEventListener(`mousedown`, function (evt) {
+      evt.preventDefault();
+      const pins = container.querySelectorAll(`.map__pin:not(.map__pin--main)`);
 
-  main.addEventListener(`mousedown`, function (evt) {
-    evt.preventDefault();
+      if (evt.button === 0 && pins.length === 0) {
+        switchOn();
+        show(window.data.offers);
+      }
 
-    let startCoordinates = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
+      let startCoordinates = {
+        x: evt.clientX,
+        y: evt.clientY
+      };
 
+      const onMouseMove = function (moveEvt) {
+        setPosition(moveEvt, startCoordinates, setAddress);
+      };
 
-    const onMouseMove = function (moveEvt) {
-      setPosition(moveEvt, startCoordinates);
-    };
+      const onMouseUp = function (upEvt) {
+        upEvt.preventDefault();
+        setPosition(upEvt, startCoordinates, setAddress);
+        document.removeEventListener(`mousemove`, onMouseMove);
+        document.removeEventListener(`mouseup`, onMouseUp);
+      };
 
-    const onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
-      setPosition(upEvt, startCoordinates);
-      map.removeEventListener(`mousemove`, onMouseMove);
-      map.removeEventListener(`mouseup`, onMouseUp);
-    };
-
-    const onMouseLeave = function (leaveEvt) {
-      leaveEvt.preventDefault();
-      map.removeEventListener(`mousemove`, onMouseMove);
-      map.removeEventListener(`mouseup`, onMouseUp);
-    };
-
-    map.addEventListener(`mousemove`, onMouseMove);
-    map.addEventListener(`mouseup`, onMouseUp);
-    map.addEventListener(`mouseleave`, onMouseLeave);
-  });
+      document.addEventListener(`mousemove`, onMouseMove);
+      document.addEventListener(`mouseup`, onMouseUp);
+    });
+  };
 
   window.pin = {
-    // mainPosition,
-    mainCenterPosition,
-    create,
-    show,
+    mainCenterCoordinates,
+    hide,
+    setMainCenter,
     onMainMouseDown,
     onMainKeyDown
   };
