@@ -121,10 +121,7 @@
     resetButton.addEventListener(`click`, function (evt) {
       evt.preventDefault();
       adForm.reset();
-      const pins = document.querySelectorAll(`.map__pin:not(.map__pin--main)`);
-      for (let pin of pins) {
-        pin.remove();
-      }
+      window.pin.hide();
       window.card.close();
       switchOff();
     });
@@ -133,19 +130,23 @@
   const enable = function () {
     adForm.classList.remove(`ad-form--disabled`);
     window.main.setChildrenDisabled(adForm, false);
-    address.value = `${window.pin.mainPosition.left}, ${window.pin.mainPosition.top}`;
+    // address.value = `${window.pin.mainPosition.left}, ${window.pin.mainPosition.top}`;
   };
 
   const disable = function () {
     adForm.classList.add(`ad-form--disabled`);
     window.main.setChildrenDisabled(adForm, true);
-    address.value = `${window.pin.mainCenterPosition.left}, ${window.pin.mainCenterPosition.top}`;
+    address.value = `${window.pin.mainCenterCoordinates.left}, ${window.pin.mainCenterCoordinates.top}`;
   };
 
+  const setAddress = function (x, y) {
+    address.value = `${x}, ${y}`;
+  };
 
   window.form = {
     enable,
     disable,
-    reset
+    reset,
+    setAddress
   };
 })();
