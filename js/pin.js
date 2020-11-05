@@ -22,11 +22,6 @@
     left: Math.round(window.main.getPosition(main).left)
   };
 
-  const mainCenterCoordinates = {
-    top: Math.round(window.main.getPosition(main).top + main.clientHeight / 2),
-    left: Math.round(window.main.getPosition(main).left + main.clientWidth / 2)
-  };
-
   const create = function (object) {
     const pin = template.cloneNode(true);
     const pinImage = pin.querySelector(`img`);
@@ -61,18 +56,15 @@
   const setMainCenter = function () {
     main.style.top = `${mainCenterPosition.top}px`;
     main.style.left = `${mainCenterPosition.left}px`;
+
+    const centerCoords = {
+      top: Math.round(mainCenterPosition.top + main.clientHeight / 2),
+      left: Math.round(mainCenterPosition.left + main.clientWidth / 2),
+    };
+    window.form.setAddress(centerCoords.left, centerCoords.top);
   };
 
-  const onMainKeyDown = function (switchOn) {
-    main.addEventListener(`keydown`, function (evt) {
-      if (evt.key === `Enter`) {
-        switchOn();
-        show(window.data.offers);
-      }
-    });
-  };
-
-  const setPosition = function (evt, coords, setCoords) {
+  const setPosition = function (evt, coords) {
     evt.preventDefault();
     const shift = {
       x: coords.x - evt.clientX,
@@ -105,7 +97,7 @@
       top: Math.round(mainTopPosition + MAIN_SIZE.height),
       left: Math.round(mainLeftPosition + MAIN_SIZE.width / 2)
     };
-    setCoords(mainPosition.left, mainPosition.top);
+    window.form.setAddress(mainPosition.left, mainPosition.top);
   };
 
   const onMainMouseDown = function (switchOn, setAddress) {
@@ -115,7 +107,9 @@
 
       if (evt.button === 0 && pins.length === 0) {
         switchOn();
-        show(window.data.offers);
+        // window.load(onSuccess, onError);
+        show(offers);
+        // show(window.data.offers);
       }
 
       let startCoordinates = {
@@ -139,8 +133,57 @@
     });
   };
 
+  const onMainKeyDown = function (switchOn) {
+    main.addEventListener(`keydown`, function (evt) {
+      if (evt.key === `Enter`) {
+        switchOn();
+        // window.load(onSuccess, onError);
+        show(offers);
+        // show(window.data.offers);
+      }
+    });
+  };
+
+  container.addEventListener(`click`, function (evt) {
+    const eventTarget = evt.target.closest(`.map__pin:not(.map__pin--main)`);
+    if (!eventTarget) {
+      return;
+    }
+    window.card.close();
+    const eventTargetIndex = eventTarget.dataset.index;
+    // window.card.open(window.data.offers[eventTargetIndex]);
+    window.card.open(offers[eventTargetIndex]);
+  });
+
+
+  let offers = [];
+  const onSuccess = function (response) {
+    // show(response);
+    offers = response;
+  };
+
+  const onError = function (error) {
+    const nodeError = document.createElement(`div`);
+    nodeError.style.position = `fixed`;
+    nodeError.style.top = 0;
+    nodeError.style.left = 0;
+    nodeError.style.width = `100%`;
+    nodeError.style.padding = `15px`;
+    nodeError.style.fontWeight = 700;
+    nodeError.style.fontSize = `18px`;
+    nodeError.style.textAlign = `center`;
+    nodeError.style.color = `#ffffff`;
+    nodeError.style.backgroundColor = `#ff5635`;
+    nodeError.style.boxShadow = `0 0 20px 0 #ff6547`;
+    nodeError.style.zIndex = 2;
+
+    nodeError.textContent = error;
+    document.body.insertAdjacentElement(`afterbegin`, nodeError);
+  };
+
+  window.load(onSuccess, onError);
+
   window.pin = {
-    mainCenterCoordinates,
     hide,
     setMainCenter,
     onMainMouseDown,

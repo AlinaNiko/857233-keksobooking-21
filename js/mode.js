@@ -16,7 +16,7 @@
     switchOffActive();
   });
 
-  window.pin.onMainMouseDown(switchOnActive, window.form.setAddress);
+  window.pin.onMainMouseDown(switchOnActive);
   window.pin.onMainKeyDown(switchOnActive);
 
   window.form.reset(switchOffActive);

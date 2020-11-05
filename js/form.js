@@ -130,13 +130,11 @@
   const enable = function () {
     adForm.classList.remove(`ad-form--disabled`);
     window.main.setChildrenDisabled(adForm, false);
-    // address.value = `${window.pin.mainPosition.left}, ${window.pin.mainPosition.top}`;
   };
 
   const disable = function () {
     adForm.classList.add(`ad-form--disabled`);
     window.main.setChildrenDisabled(adForm, true);
-    address.value = `${window.pin.mainCenterCoordinates.left}, ${window.pin.mainCenterCoordinates.top}`;
   };
 
   const setAddress = function (x, y) {
