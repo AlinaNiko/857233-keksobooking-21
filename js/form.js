@@ -117,15 +117,11 @@
   });
 
   const resetButton = adForm.querySelector(`.ad-form__reset`);
-  const reset = function (switchOff) {
-    resetButton.addEventListener(`click`, function (evt) {
-      evt.preventDefault();
-      adForm.reset();
-      window.pin.hide();
-      window.card.close();
-      switchOff();
-    });
-  };
+  resetButton.addEventListener(`click`, function (evt) {
+    evt.preventDefault();
+    adForm.reset();
+    window.mode.switchOffActive();
+  });
 
   const enable = function () {
     adForm.classList.remove(`ad-form--disabled`);
@@ -144,7 +140,6 @@
   window.form = {
     enable,
     disable,
-    reset,
     setAddress
   };
 })();

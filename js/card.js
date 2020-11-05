@@ -3,7 +3,7 @@
 (function () {
   const map = document.querySelector(`.map`);
   const template = document.querySelector(`#card`).content.querySelector(`.map__card`);
-  const neighbor = map.querySelector(`.map__filters-container`);
+  const filtersContainer = map.querySelector(`.map__filters-container`);
 
   const offerType = function (objectType) {
     if (objectType === `palace`) {
@@ -76,22 +76,16 @@
 
     card.querySelector(`.popup__avatar`).src = object.author.avatar;
 
-    const popupCloseButton = card.querySelector(`.popup__close`);
-    popupCloseButton.addEventListener(`click`, function () {
+    const closeButton = card.querySelector(`.popup__close`);
+    closeButton.addEventListener(`click`, function () {
       close();
     });
 
     return card;
   };
 
-  const onDocumentKeydown = function (evt) {
-    if (evt.key === `Escape`) {
-      close();
-    }
-  };
-
   const open = function (object) {
-    map.insertBefore(create(object), neighbor);
+    map.insertBefore(create(object), filtersContainer);
     document.addEventListener(`keydown`, onDocumentKeydown);
   };
 
@@ -103,8 +97,13 @@
     }
   };
 
+  const onDocumentKeydown = function (evt) {
+    if (evt.key === `Escape`) {
+      close();
+    }
+  };
+
   window.card = {
-    create,
     open,
     close
   };
