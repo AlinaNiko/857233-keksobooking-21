@@ -2,6 +2,9 @@
 
 (function () {
   const URL = `https://21.javascript.pages.academy/keksobooking`;
+  const StatusCode = {
+    OK: 200
+  };
   const TIMEOUT_IN_MS = 10000;
 
   window.upload = function (data, onSuccess, onError) {
@@ -9,7 +12,7 @@
     xhr.responseType = `json`;
 
     xhr.addEventListener(`load`, function () {
-      if (xhr.status === 200) {
+      if (xhr.status === StatusCode.OK) {
         onSuccess(xhr.response);
       } else {
         onError();
