@@ -5,10 +5,15 @@
   const filters = map.querySelector(`.map__filters`);
   const pinContainer = map.querySelector(`.map__pins`);
 
+  let offers = [];
+
   const showPins = function (array) {
+    offers = array.filter(function (object) {
+      return object.offer;
+    });
     const fragment = document.createDocumentFragment();
-    for (let i = 0; i < array.length; i++) {
-      const arrayItem = array[i];
+    for (let i = 0; i < offers.length; i++) {
+      const arrayItem = offers[i];
       const readyPin = window.pin.create(arrayItem);
       readyPin.setAttribute(`data-index`, i);
       fragment.appendChild(readyPin);
@@ -35,15 +40,28 @@
     window.main.setChildrenDisabled(filters, false);
   };
 
-  // pinContainer.addEventListener(`click`, function (evt) {
-  //   const eventTarget = evt.target.closest(`.map__pin:not(.map__pin--main)`);
-  //   if (!eventTarget) {
-  //     return;
-  //   }
-  //   window.card.close();
-  //   const eventTargetIndex = eventTarget.dataset.index;
-  //   window.card.open(window.data.offers[eventTargetIndex]); // как использовать вернувшийся с сервера массив для открытия нужной карточки?
-  // });
+  const unactivatePin = function () {
+    const pins = pinContainer.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+    for (let pin of pins) {
+      pin.classList.remove(`map__pin--active`);
+    }
+  };
+
+  const activatePin = function (pin) {
+    pin.classList.add(`map__pin--active`);
+  };
+
+  pinContainer.addEventListener(`click`, function (evt) {
+    unactivatePin();
+    const eventTarget = evt.target.closest(`.map__pin:not(.map__pin--main)`);
+    if (!eventTarget) {
+      return;
+    }
+    window.card.close();
+    activatePin(eventTarget);
+    const eventTargetIndex = eventTarget.dataset.index;
+    window.card.open(offers[eventTargetIndex]);
+  });
 
   window.map = {
     disable,

@@ -4,17 +4,11 @@
   const map = document.querySelector(`.map`);
   const template = document.querySelector(`#card`).content.querySelector(`.map__card`);
   const filtersContainer = map.querySelector(`.map__filters-container`);
-
-  const offerType = function (objectType) {
-    if (objectType === `palace`) {
-      return `Дворец`;
-    } else if (objectType === `flat`) {
-      return `Квартира`;
-    } else if (objectType === `house`) {
-      return `Дом`;
-    } else {
-      return `Бунгало`;
-    }
+  const offerType = {
+    palace: `Дворец`,
+    flat: `Квартира`,
+    house: `Дом`,
+    bungalow: `Бунгало`
   };
 
   const getPluralRoomNoun = function (number) {
@@ -46,7 +40,7 @@
     card.querySelector(`.popup__title`).textContent = object.offer.title;
     card.querySelector(`.popup__text--address`).textContent = object.offer.address;
     card.querySelector(`.popup__text--price`).textContent = `${object.offer.price}₽/ночь`;
-    card.querySelector(`.popup__type`).textContent = offerType(object.offer.type);
+    card.querySelector(`.popup__type`).textContent = offerType[object.offer.type];
     card.querySelector(`.popup__text--capacity`).textContent = `${getPluralRoomNoun(object.offer.rooms)} для ${getPluralGuestNoun(object.offer.guests)}`;
     card.querySelector(`.popup__text--time`).textContent = `Заезд после ${object.offer.checkin}, выезд до ${object.offer.checkout}`;
 

@@ -3,7 +3,7 @@
 (function () {
   const switchOffActive = function () {
     window.card.close();
-    window.mainPin.setCenter();
+    window.mainPin.setCenterPosition();
     window.form.disable();
     window.map.disable();
   };
@@ -20,23 +20,6 @@
   window.addEventListener(`load`, function () {
     switchOffActive();
   });
-
-
-  // начало фрагмента из модуля map
-  const map = document.querySelector(`.map`);
-  const pinContainer = map.querySelector(`.map__pins`);
-
-  pinContainer.addEventListener(`click`, function (evt) {
-    const eventTarget = evt.target.closest(`.map__pin:not(.map__pin--main)`);
-    if (!eventTarget) {
-      return;
-    }
-    window.card.close();
-    const eventTargetIndex = eventTarget.dataset.index;
-    window.card.open(loadedOffers[eventTargetIndex]);// как использовать вернувшийся с сервера массив для открытия нужной карточки, если он используется в модуле map?
-  });
-  // конец фрагмента из модуля map
-
 
   let loadedOffers = [];
   const onSuccess = function (response) {
