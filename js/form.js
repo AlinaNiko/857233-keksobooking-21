@@ -140,9 +140,6 @@
     address.value = `${Math.round(x)}, ${Math.round(y)}`;
   };
 
-  const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
-  const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
-
   adForm.addEventListener(`submit`, function (evt) {
     evt.preventDefault();
     window.upload(new FormData(adForm), onSuccess, onError);
@@ -150,16 +147,11 @@
 
   const onSuccess = function () {
     window.mode.switchOffActive();
-    window.message.show(successTemplate);
+    window.message.showSuccess();
   };
 
   const onError = function () {
-    window.message.show(errorTemplate);
-    const errorButton = document.querySelector(`.error__button`);
-    errorButton.addEventListener(`click`, function (evt) {
-      evt.preventDefault();
-      window.message.hide();
-    });
+    window.message.showError();
   };
 
   window.form = {

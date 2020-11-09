@@ -30,8 +30,25 @@
     hide();
   };
 
+  const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
+  const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
+
+  const showSuccess = function () {
+    show(successTemplate);
+  };
+
+  const showError = function () {
+    show(errorTemplate);
+    const errorButton = document.querySelector(`.error__button`);
+    errorButton.addEventListener(`click`, function (evt) {
+      evt.preventDefault();
+      hide();
+    });
+  };
+
+
   window.message = {
-    show,
-    hide
+    showSuccess,
+    showError
   };
 })();
