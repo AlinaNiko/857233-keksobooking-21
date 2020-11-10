@@ -142,7 +142,7 @@
 
   adForm.addEventListener(`submit`, function (evt) {
     evt.preventDefault();
-    window.upload(new FormData(adForm), onSuccess, onError);
+    window.server.upload(new FormData(adForm), onSuccess, onError);
   });
 
   const onSuccess = function () {
@@ -150,8 +150,8 @@
     window.message.showSuccess();
   };
 
-  const onError = function () {
-    window.message.showError();
+  const onError = function (error) {
+    window.message.showError(error);
   };
 
   window.form = {
