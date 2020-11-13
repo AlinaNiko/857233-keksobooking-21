@@ -13,7 +13,7 @@
     window.map.enable();
     const pins = document.querySelectorAll(`.map__pin:not(.map__pin--main)`);
     if (pins.length === 0) {
-      window.load(onSuccess, onError);
+      window.server.load(onSuccess, onError);
     }
   };
 
@@ -22,6 +22,7 @@
   });
 
   let loadedOffers = [];
+
   const onSuccess = function (response) {
     loadedOffers = response;
     window.map.showPins(loadedOffers);
@@ -46,10 +47,15 @@
     document.body.insertAdjacentElement(`afterbegin`, nodeError);
   };
 
+  const getLoadedOffers = function () {
+    return loadedOffers;
+  };
+
   window.mode = {
     switchOnActive,
     switchOffActive,
     onSuccess,
-    onError
+    onError,
+    getLoadedOffers
   };
 })();
