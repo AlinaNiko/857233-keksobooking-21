@@ -47,10 +47,15 @@
     document.body.insertAdjacentElement(`afterbegin`, nodeError);
   };
 
+  const getLoadedOffers = function () {
+    return loadedOffers;
+  };
+
   window.mode = {
     switchOnActive,
     switchOffActive,
     onSuccess,
-    onError
+    onError,
+    getLoadedOffers
   };
 })();

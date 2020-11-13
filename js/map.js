@@ -4,6 +4,7 @@
   const map = document.querySelector(`.map`);
   const filters = map.querySelector(`.map__filters`);
   const pinContainer = map.querySelector(`.map__pins`);
+  const MAX_OFFERS_AMOUNT = 5;
 
   let offers = [];
 
@@ -11,8 +12,9 @@
     offers = array.filter(function (object) {
       return object.offer;
     });
+    const offersSize = Math.min(offers.length, MAX_OFFERS_AMOUNT);
     const fragment = document.createDocumentFragment();
-    for (let i = 0; i < offers.length; i++) {
+    for (let i = 0; i < offersSize; i++) {
       const arrayItem = offers[i];
       const readyPin = window.pin.create(arrayItem);
       readyPin.setAttribute(`data-index`, i);
@@ -67,6 +69,7 @@
     disable,
     enable,
     hidePins,
-    showPins
+    showPins,
+    unactivatePin
   };
 })();
