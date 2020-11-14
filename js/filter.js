@@ -56,11 +56,15 @@
     });
   };
 
-  form.addEventListener(`change`, function () {
+  const updateOffers = function () {
     const filteredOffers = apply(window.mode.getLoadedOffers());
     window.card.close();
     window.map.hidePins();
     window.map.showPins(filteredOffers);
+  };
+
+  form.addEventListener(`change`, function () {
+    window.debounce(updateOffers);
   });
 })();
 
