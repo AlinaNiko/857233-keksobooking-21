@@ -2,87 +2,87 @@
 
 (function () {
   const adForm = document.querySelector(`.ad-form`);
-  const fileFields = adForm.querySelectorAll(`[type="file"]`);
-  const titleField = adForm.querySelector(`#title`);
+  const file = adForm.querySelectorAll(`[type="file"]`);
+  const title = adForm.querySelector(`#title`);
   const address = adForm.querySelector(`#address`);
-  const priceField = adForm.querySelector(`#price`);
-  const typeField = adForm.querySelector(`#type`);
-  const timeInField = adForm.querySelector(`#timein`);
-  const timeOutField = adForm.querySelector(`#timeout`);
-  const roomNumberField = adForm.querySelector(`#room_number`);
-  const capacityField = adForm.querySelector(`#capacity`);
+  const price = adForm.querySelector(`#price`);
+  const type = adForm.querySelector(`#type`);
+  const timeIn = adForm.querySelector(`#timein`);
+  const timeOut = adForm.querySelector(`#timeout`);
+  const roomNumber = adForm.querySelector(`#room_number`);
+  const capacity = adForm.querySelector(`#capacity`);
 
   adForm.action = `https://21.javascript.pages.academy/keksobooking`;
-  for (let fileField of fileFields) {
+  for (let fileField of file) {
     fileField.accept = `image/png, image/jpeg`;
   }
 
   address.setAttribute(`readonly`, ``);
 
-  titleField.setAttribute(`required`, ``);
-  titleField.setAttribute(`minlength`, `30`);
-  titleField.setAttribute(`maxlength`, `100`);
+  title.setAttribute(`required`, ``);
+  title.setAttribute(`minlength`, `30`);
+  title.setAttribute(`maxlength`, `100`);
 
-  titleField.addEventListener(`input`, function () {
-    const titleFieldValueLength = titleField.value.length;
-    if (titleFieldValueLength < titleField.getAttribute(`minlength`)) {
-      titleField.setCustomValidity(`Минимальная длина заголовка ${titleField.getAttribute(`minlength`)} симв. Осталось ввести еще ${titleField.getAttribute(`minlength`) - titleFieldValueLength} симв.`);
+  title.addEventListener(`input`, function () {
+    const titleValueLength = title.value.length;
+    if (titleValueLength < title.getAttribute(`minlength`)) {
+      title.setCustomValidity(`Минимальная длина заголовка ${title.getAttribute(`minlength`)} симв. Осталось ввести еще ${title.getAttribute(`minlength`) - titleValueLength} симв.`);
     } else {
-      titleField.setCustomValidity(``);
+      title.setCustomValidity(``);
     }
-    titleField.reportValidity();
+    title.reportValidity();
   });
 
-  priceField.setAttribute(`required`, ``);
-  priceField.setAttribute(`max`, `1000000`);
+  price.setAttribute(`required`, ``);
+  price.setAttribute(`max`, `1000000`);
 
   const setPriceValue = function () {
     let value;
-    if (typeField.value === `bungalow`) {
+    if (type.value === `bungalow`) {
       value = 0;
-    } else if (typeField.value === `flat`) {
+    } else if (type.value === `flat`) {
       value = 1000;
-    } else if (typeField.value === `house`) {
+    } else if (type.value === `house`) {
       value = 5000;
     } else {
       value = 10000;
     }
-    priceField.min = value;
-    priceField.placeholder = value;
+    price.min = value;
+    price.placeholder = value;
   };
 
   const setPriceValidation = function () {
     let message = ``;
-    if (priceField.validity.valueMissing) {
+    if (price.validity.valueMissing) {
       message = `Укажите цену`;
-    } else if (priceField.validity.rangeOverflow) {
-      message = `Максимальная цена за ночь ${priceField.getAttribute(`max`)} руб.`;
-    } else if (priceField.validity.rangeUnderflow) {
-      message = `Минимальная цена за ночь ${priceField.getAttribute(`min`)} руб.`;
+    } else if (price.validity.rangeOverflow) {
+      message = `Максимальная цена за ночь ${price.getAttribute(`max`)} руб.`;
+    } else if (price.validity.rangeUnderflow) {
+      message = `Минимальная цена за ночь ${price.getAttribute(`min`)} руб.`;
     } else {
       message = ``;
     }
-    priceField.setCustomValidity(message);
-    priceField.reportValidity();
+    price.setCustomValidity(message);
+    price.reportValidity();
   };
 
   setPriceValue();
 
-  typeField.addEventListener(`change`, function () {
+  type.addEventListener(`change`, function () {
     setPriceValue();
     setPriceValidation();
   });
 
-  priceField.addEventListener(`input`, function () {
+  price.addEventListener(`input`, function () {
     setPriceValidation();
   });
 
-  timeInField.addEventListener(`change`, function () {
-    timeOutField.value = timeInField.value;
+  timeIn.addEventListener(`change`, function () {
+    timeOut.value = timeIn.value;
   });
 
-  timeOutField.addEventListener(`change`, function () {
-    timeInField.value = timeOutField.value;
+  timeOut.addEventListener(`change`, function () {
+    timeIn.value = timeOut.value;
   });
 
   const getErrorMessage = function (roomsField, guestsField) {
@@ -98,22 +98,22 @@
     }
   };
 
-  roomNumberField.addEventListener(`change`, function () {
-    roomNumberField.setCustomValidity(``);
-    capacityField.setCustomValidity(``);
-    const errorMessage = getErrorMessage(roomNumberField, capacityField);
-    roomNumberField.setCustomValidity(errorMessage);
-    roomNumberField.reportValidity();
+  roomNumber.addEventListener(`change`, function () {
+    roomNumber.setCustomValidity(``);
+    capacity.setCustomValidity(``);
+    const errorMessage = getErrorMessage(roomNumber, capacity);
+    roomNumber.setCustomValidity(errorMessage);
+    roomNumber.reportValidity();
   });
 
-  capacityField.setCustomValidity(getErrorMessage(roomNumberField, capacityField));
+  capacity.setCustomValidity(getErrorMessage(roomNumber, capacity));
 
-  capacityField.addEventListener(`change`, function () {
-    roomNumberField.setCustomValidity(``);
-    capacityField.setCustomValidity(``);
-    const errorMessage = getErrorMessage(roomNumberField, capacityField);
-    capacityField.setCustomValidity(errorMessage);
-    capacityField.reportValidity();
+  capacity.addEventListener(`change`, function () {
+    roomNumber.setCustomValidity(``);
+    capacity.setCustomValidity(``);
+    const errorMessage = getErrorMessage(roomNumber, capacity);
+    capacity.setCustomValidity(errorMessage);
+    capacity.reportValidity();
   });
 
   const resetButton = adForm.querySelector(`.ad-form__reset`);

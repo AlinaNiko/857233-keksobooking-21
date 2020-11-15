@@ -35,8 +35,8 @@
 
   const create = function (object) {
     const card = template.cloneNode(true);
-    const features = card.querySelector(`.popup__features`);
-    const photos = card.querySelector(`.popup__photos`);
+    const featuresBlock = card.querySelector(`.popup__features`);
+    const photosBlock = card.querySelector(`.popup__photos`);
     card.querySelector(`.popup__title`).textContent = object.offer.title;
     card.querySelector(`.popup__text--address`).textContent = object.offer.address;
     card.querySelector(`.popup__text--price`).textContent = `${object.offer.price}₽/ночь`;
@@ -50,9 +50,9 @@
         const feature = object.offer.features[i];
         newFeatureItems += `<li class="popup__feature popup__feature--${feature}"></li>`;
       }
-      features.innerHTML = newFeatureItems;
+      featuresBlock.innerHTML = newFeatureItems;
     } else {
-      features.classList.add(`hidden`);
+      featuresBlock.classList.add(`hidden`);
     }
 
     card.querySelector(`.popup__description`).textContent = object.offer.description;
@@ -63,7 +63,7 @@
         const photoSrc = object.offer.photos[i];
         newPhotoItems += `<img src="${photoSrc}" class="popup__photo" width="45" height="40" alt="Фотография жилья">`;
       }
-      photos.innerHTML = newPhotoItems;
+      photosBlock.innerHTML = newPhotoItems;
     } else {
       card.querySelector(`.popup__photos`).classList.add(`hidden`);
     }

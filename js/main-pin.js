@@ -1,8 +1,6 @@
 "use strict";
 
 (function () {
-  const map = document.querySelector(`.map`);
-  const main = map.querySelector(`.map__pin--main`);
   const ActiveSize = {
     WIDTH: 62,
     HEIGHT: 84
@@ -19,6 +17,9 @@
     TOP: 375,
     LEFT: 570
   };
+
+  const map = document.querySelector(`.map`);
+  const main = map.querySelector(`.map__pin--main`);
 
   const setPosition = function (x, y) {
     main.style.left = `${x - ActiveSize.WIDTH / 2}px`;
