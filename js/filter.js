@@ -63,8 +63,6 @@
     window.map.showPins(filteredOffers);
   };
 
-  form.addEventListener(`change`, function () {
-    window.debounce(updateOffers);
-  });
+  form.addEventListener(`change`, window.debounce(updateOffers));
 })();
 
