@@ -4,7 +4,7 @@
   const MAX_OFFERS_AMOUNT = 5;
 
   const map = document.querySelector(`.map`);
-  const filtersBlock = map.querySelector(`.map__filters`);
+  // const filtersBlock = map.querySelector(`.map__filters`);
   const pinsBlock = map.querySelector(`.map__pins`);
 
   let offers = [];
@@ -34,13 +34,13 @@
 
   const disable = function () {
     map.classList.add(`map--faded`);
-    window.main.setChildrenDisabled(filtersBlock, true);
+    // window.main.setChildrenDisabled(filtersBlock, true);
     hidePins();
   };
 
   const enable = function () {
     map.classList.remove(`map--faded`);
-    window.main.setChildrenDisabled(filtersBlock, false);
+    // window.main.setChildrenDisabled(filtersBlock, false);
   };
 
   const unactivatePin = function () {

@@ -64,5 +64,18 @@
   };
 
   form.addEventListener(`change`, window.debounce(updateOffers));
+
+  const disable = function () {
+    form.reset();
+    window.main.setChildrenDisabled(form, true);
+  };
+  const enable = function () {
+    window.main.setChildrenDisabled(form, false);
+  };
+
+  window.filter = {
+    disable,
+    enable
+  };
 })();
 

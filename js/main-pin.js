@@ -84,8 +84,13 @@
       upEvt.preventDefault();
 
       if (!dragged) {
-        setPosition(startPosition.x, startPosition.y);
-        window.form.setAddress(startPosition.x, startPosition.y);
+        const onMouseClick = function (clickEvt) {
+          clickEvt.preventDefault();
+          setPosition(startPosition.x, startPosition.y);
+          window.form.setAddress(startPosition.x, startPosition.y);
+          main.removeEventListener(`click`, onMouseClick);
+        };
+        main.addEventListener(`click`, onMouseClick);
       }
 
       document.removeEventListener(`mousemove`, onMouseMove);
@@ -101,6 +106,18 @@
     evt.preventDefault();
     window.mode.switchOnActive();
   });
+
+  const onMainKeyDown = function (evt) {
+    evt.preventDefault();
+    if (evt.key === `Enter`) {
+      const startPosition = getPosition();
+      window.mode.switchOnActive();
+      window.form.setAddress(startPosition.x, startPosition.y);
+      main.removeEventListener(`keydown`, onMainKeyDown);
+    }
+  };
+
+  main.addEventListener(`keydown`, onMainKeyDown);
 
   window.mainPin = {
     setCenterPosition,

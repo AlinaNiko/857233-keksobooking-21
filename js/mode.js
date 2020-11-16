@@ -1,19 +1,23 @@
 "use strict";
 
 (function () {
+  let isActive = false;
+
   const switchOffActive = function () {
     window.card.close();
     window.mainPin.setCenterPosition();
     window.form.disable();
     window.map.disable();
+    window.filter.disable();
+    isActive = false;
   };
 
   const switchOnActive = function () {
-    window.form.enable();
-    window.map.enable();
-    const pins = document.querySelectorAll(`.map__pin:not(.map__pin--main)`);
-    if (pins.length === 0) {
+    if (!isActive) {
+      window.form.enable();
+      window.map.enable();
       window.server.load(onSuccess, onError);
+      isActive = true;
     }
   };
 
@@ -26,6 +30,7 @@
   const onSuccess = function (response) {
     loadedOffers = response;
     window.map.showPins(loadedOffers);
+    window.filter.enable();
   };
 
   const onError = function (error) {

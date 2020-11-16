@@ -148,6 +148,7 @@
   const onSuccess = function () {
     window.mode.switchOffActive();
     window.message.showSuccess();
+    capacity.setCustomValidity(getErrorMessage(roomNumber, capacity));
   };
 
   const onError = function (error) {
