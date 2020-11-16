@@ -38,6 +38,7 @@
   };
 
   const showError = function (error) {
+    window.card.close();
     show(errorTemplate);
     const errorButton = document.querySelector(`.error__button`);
     const errorMessage = document.querySelector(`.error__message`);
