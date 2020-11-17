@@ -1,14 +1,18 @@
 "use strict";
 
 let isActive = false;
+
 const switchOffActive = function () {
   window.card.hide();
   window.mainPin.setCenterPosition();
   window.form.disable();
   window.map.disable();
   window.filter.disable();
+  window.images.reset();
   isActive = false;
 };
+
+
 const switchOnActive = function () {
   if (!isActive) {
     window.form.enable();
@@ -17,17 +21,25 @@ const switchOnActive = function () {
     isActive = true;
   }
 };
+
+
 window.addEventListener(`load`, function () {
   switchOffActive();
 });
+
+
 let loadedOffers = [];
+
 const onSuccess = function (response) {
   loadedOffers = response;
   window.map.showPins(loadedOffers);
   window.filter.enable();
 };
+
+
 const onError = function (error) {
   const nodeError = document.createElement(`div`);
+
   nodeError.style.position = `fixed`;
   nodeError.style.top = 0;
   nodeError.style.left = 0;
@@ -43,9 +55,13 @@ const onError = function (error) {
   nodeError.textContent = error;
   document.body.insertAdjacentElement(`afterbegin`, nodeError);
 };
+
+
 const getLoadedOffers = function () {
   return loadedOffers;
 };
+
+
 window.mode = {
   switchOnActive,
   switchOffActive,

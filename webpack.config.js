@@ -12,7 +12,8 @@ module.exports = {
     "./js/map.js",
     "./js/mode.js",
     "./js/debounce.js",
-    "./js/filter.js"
+    "./js/filter.js",
+    "./js/images.js"
   ],
   output: {
     filename: "bundle.js",
