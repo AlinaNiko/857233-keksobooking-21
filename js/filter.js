@@ -1,6 +1,11 @@
 "use strict";
 
 (function () {
+  const PriceRange = {
+    LOWER_LIMIT: 10000,
+    UPPER_LIMIT: 50000
+  };
+
   const form = document.querySelector(`.map__filters`);
   const type = form.querySelector(`#housing-type`);
   const price = form.querySelector(`#housing-price`);
@@ -13,11 +18,11 @@
   };
 
   const getPriceName = function (item) {
-    if (item.offer.price >= 10000 && item.offer.price <= 50000) {
+    if (item.offer.price >= PriceRange.LOWER_LIMIT && item.offer.price <= PriceRange.UPPER_LIMIT) {
       return `middle`;
-    } else if (item.offer.price < 10000) {
+    } else if (item.offer.price < PriceRange.LOWER_LIMIT) {
       return `low`;
-    } else if (item.offer.price > 50000) {
+    } else if (item.offer.price > PriceRange.UPPER_LIMIT) {
       return `high`;
     } else {
       return `any`;

@@ -4,7 +4,6 @@
   const MAX_OFFERS_AMOUNT = 5;
 
   const map = document.querySelector(`.map`);
-  // const filtersBlock = map.querySelector(`.map__filters`);
   const pinsBlock = map.querySelector(`.map__pins`);
 
   let offers = [];
@@ -18,7 +17,7 @@
     for (let i = 0; i < offersSize; i++) {
       const arrayItem = offers[i];
       const readyPin = window.pin.create(arrayItem);
-      readyPin.setAttribute(`data-index`, i);
+      readyPin.dataset.index = i;
       fragment.appendChild(readyPin);
     }
 
@@ -34,19 +33,17 @@
 
   const disable = function () {
     map.classList.add(`map--faded`);
-    // window.main.setChildrenDisabled(filtersBlock, true);
     hidePins();
   };
 
   const enable = function () {
     map.classList.remove(`map--faded`);
-    // window.main.setChildrenDisabled(filtersBlock, false);
   };
 
   const unactivatePin = function () {
-    const pins = pinsBlock.querySelectorAll(`.map__pin:not(.map__pin--main)`);
-    for (let pin of pins) {
-      pin.classList.remove(`map__pin--active`);
+    const activePin = pinsBlock.querySelector(`.map__pin--active`);
+    if (activePin) {
+      activePin.classList.remove(`map__pin--active`);
     }
   };
 

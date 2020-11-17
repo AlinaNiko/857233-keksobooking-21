@@ -63,13 +63,19 @@
     setTextContentOrHide(card.querySelector(`.popup__text--time`), timeValue);
 
     const featuresBlock = card.querySelector(`.popup__features`);
+    const features = featuresBlock.querySelectorAll(`.popup__feature`);
     if (Array.isArray(object.offer.features) && object.offer.features.length > 0) {
-      let newFeatureItems = ``;
-      for (let i = 0; i < object.offer.features.length; i++) {
-        const feature = object.offer.features[i];
-        newFeatureItems += `<li class="popup__feature popup__feature--${feature}"></li>`;
+      for (let feature of features) {
+        feature.remove();
       }
-      featuresBlock.innerHTML = newFeatureItems;
+      const fragment = document.createDocumentFragment();
+      for (let i = 0; i < object.offer.features.length; i++) {
+        const newFeatureItem = document.createElement(`li`);
+        const feature = object.offer.features[i];
+        newFeatureItem.classList.add(`popup__feature`, `popup__feature--${feature}`);
+        fragment.appendChild(newFeatureItem);
+      }
+      featuresBlock.appendChild(fragment);
     } else {
       hideBlock(featuresBlock);
     }
@@ -77,13 +83,17 @@
     setTextContentOrHide(card.querySelector(`.popup__description`), object.offer.description);
 
     const photosBlock = card.querySelector(`.popup__photos`);
+    const photo = photosBlock.querySelector(`.popup__photo`);
     if (Array.isArray(object.offer.photos) && object.offer.photos.length > 0) {
-      let newPhotoItems = ``;
+      photo.remove();
+      const fragment = document.createDocumentFragment();
       for (let i = 0; i < object.offer.photos.length; i++) {
+        const photoTemplate = photo.cloneNode(true);
         const photoSrc = object.offer.photos[i];
-        newPhotoItems += `<img src="${photoSrc}" class="popup__photo" width="45" height="40" alt="Фотография жилья">`;
+        photoTemplate.src = photoSrc;
+        fragment.appendChild(photoTemplate);
       }
-      photosBlock.innerHTML = newPhotoItems;
+      photosBlock.appendChild(fragment);
     } else {
       hideBlock(photosBlock);
     }

@@ -1,8 +1,14 @@
 "use strict";
 
 (function () {
+  const Price = {
+    MIN_FOR_BUNGALOW: 0,
+    MIN_FOR_FLAT: 1000,
+    MIN_FOR_HOUSE: 5000,
+    MIN_FOR_PALACE: 10000
+  };
+
   const adForm = document.querySelector(`.ad-form`);
-  const file = adForm.querySelectorAll(`[type="file"]`);
   const title = adForm.querySelector(`#title`);
   const address = adForm.querySelector(`#address`);
   const price = adForm.querySelector(`#price`);
@@ -11,17 +17,6 @@
   const timeOut = adForm.querySelector(`#timeout`);
   const roomNumber = adForm.querySelector(`#room_number`);
   const capacity = adForm.querySelector(`#capacity`);
-
-  adForm.action = `https://21.javascript.pages.academy/keksobooking`;
-  for (let fileField of file) {
-    fileField.accept = `image/png, image/jpeg`;
-  }
-
-  address.setAttribute(`readonly`, ``);
-
-  title.setAttribute(`required`, ``);
-  title.setAttribute(`minlength`, `30`);
-  title.setAttribute(`maxlength`, `100`);
 
   title.addEventListener(`input`, function () {
     const titleValueLength = title.value.length;
@@ -33,19 +28,16 @@
     title.reportValidity();
   });
 
-  price.setAttribute(`required`, ``);
-  price.setAttribute(`max`, `1000000`);
-
   const setPriceValue = function () {
     let value;
     if (type.value === `bungalow`) {
-      value = 0;
+      value = Price.MIN_FOR_BUNGALOW;
     } else if (type.value === `flat`) {
-      value = 1000;
+      value = Price.MIN_FOR_FLAT;
     } else if (type.value === `house`) {
-      value = 5000;
+      value = Price.MIN_FOR_HOUSE;
     } else {
-      value = 10000;
+      value = Price.MIN_FOR_PALACE;
     }
     price.min = value;
     price.placeholder = value;
