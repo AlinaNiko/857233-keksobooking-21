@@ -32,25 +32,14 @@ const checkRooms = (item) => (rooms.value === `any`) ? true : String(item.offer.
 
 const checkGuests = (item) => (guests.value === `any`) ? true : String(item.offer.guests) === guests.value;
 
+const checkFeature = (item, features) => features.every((feature) => item.offer.features.includes(feature.value));
 
-const checkFeature = (item) => {
+const apply = (offers) => {
   const features = featuresField.querySelectorAll(`input:checked`);
+  const featuresArray = Array.from(features);
 
-  if (features.length === 0) {
-    return true;
-  }
-
-  for (let feature of features) {
-    if (!item.offer.features.includes(feature.value)) {
-      return false;
-    }
-  }
-
-  return true;
+  return offers.filter((item) => checkType(item) && checkPrice(item) && checkRooms(item) && checkGuests(item) && checkFeature(item, featuresArray));
 };
-
-
-const apply = (offers) => offers.filter((item) => checkType(item) && checkPrice(item) && checkRooms(item) && checkGuests(item) && checkFeature(item));
 
 
 const updateOffers = () => {
