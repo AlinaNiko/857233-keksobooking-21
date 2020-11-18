@@ -2,7 +2,7 @@
 
 let isActive = false;
 
-const switchOffActive = function () {
+const switchOffActive = () => {
   window.card.hide();
   window.mainPin.setCenterPosition();
   window.form.disable();
@@ -13,7 +13,7 @@ const switchOffActive = function () {
 };
 
 
-const switchOnActive = function () {
+const switchOnActive = () => {
   if (!isActive) {
     window.form.enable();
     window.map.enable();
@@ -23,21 +23,21 @@ const switchOnActive = function () {
 };
 
 
-window.addEventListener(`load`, function () {
+window.addEventListener(`load`, () => {
   switchOffActive();
 });
 
 
 let loadedOffers = [];
 
-const onSuccess = function (response) {
+const onSuccess = (response) => {
   loadedOffers = response;
   window.map.showPins(loadedOffers);
   window.filter.enable();
 };
 
 
-const onError = function (error) {
+const onError = (error) => {
   const nodeError = document.createElement(`div`);
 
   nodeError.style.position = `fixed`;
@@ -57,9 +57,7 @@ const onError = function (error) {
 };
 
 
-const getLoadedOffers = function () {
-  return loadedOffers;
-};
+const getLoadedOffers = () => loadedOffers;
 
 
 window.mode = {

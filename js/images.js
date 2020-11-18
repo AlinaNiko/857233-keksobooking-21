@@ -8,34 +8,28 @@ const avatarPreview = document.querySelector(`.ad-form-header__preview img`);
 const photoInput = document.querySelector(`.ad-form__upload input[type=file]`);
 const photoPreview = document.querySelector(`.ad-form__photo`);
 
-const makePreview = function (input, func, output) {
-  input.addEventListener(`change`, function () {
+const makePreview = (input, func, output) => {
+  input.addEventListener(`change`, () => {
     const file = input.files[0];
     const fileName = file.name.toLowerCase();
 
-    const matches = FILE_TYPES.some(function (item) {
-      return fileName.endsWith(item);
-    });
+    const matches = FILE_TYPES.some((item) => fileName.endsWith(item));
 
     if (matches) {
       const reader = new FileReader();
 
-      reader.addEventListener(`load`, function () {
-        func(output, reader);
-      });
+      reader.addEventListener(`load`, () => func(output, reader));
 
       reader.readAsDataURL(file);
     }
   });
 };
 
-
-const setSrc = function (output, reader) {
+const setSrc = (output, reader) => {
   output.src = reader.result;
 };
 
-
-const setBackground = function (output, reader) {
+const setBackground = (output, reader) => {
   output.style.background = `url(${reader.result}) center / cover no-repeat`;
 };
 
@@ -43,8 +37,7 @@ const setBackground = function (output, reader) {
 makePreview(avatarInput, setSrc, avatarPreview);
 makePreview(photoInput, setBackground, photoPreview);
 
-
-const reset = function () {
+const reset = () => {
   avatarPreview.src = `img/muffin-grey.svg`;
   photoPreview.style.background = `#e4e4de`;
 };

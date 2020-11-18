@@ -13,7 +13,8 @@ const photoTemplate = template.querySelector(`.popup__photo`);
 const featureTemplate = template.querySelector(`.popup__feature`);
 const filtersContainer = map.querySelector(`.map__filters-container`);
 
-const getPluralRoomNoun = function (number) {
+
+const getPluralRoomNoun = (number) => {
   const remainderOfTen = number % 10;
   const remainderOfHundred = number % 100;
 
@@ -27,7 +28,7 @@ const getPluralRoomNoun = function (number) {
 };
 
 
-const getPluralGuestNoun = function (number) {
+const getPluralGuestNoun = (number) => {
   const remainderOfTen = number % 10;
   const remainderOfHundred = number % 100;
 
@@ -39,12 +40,12 @@ const getPluralGuestNoun = function (number) {
 };
 
 
-const hideBlock = function (element) {
+const hideBlock = (element) => {
   element.classList.add(`hidden`);
 };
 
 
-const setTextContentOrHide = function (element, value) {
+const setTextContentOrHide = (element, value) => {
   element.textContent = value;
 
   if (!value) {
@@ -53,7 +54,7 @@ const setTextContentOrHide = function (element, value) {
 };
 
 
-const create = function (object) {
+const create = (object) => {
   const card = template.cloneNode(true);
 
   setTextContentOrHide(card.querySelector(`.popup__title`), object.offer.title);
@@ -76,11 +77,11 @@ const create = function (object) {
     featuresBlock.innerHTML = ``;
     const fragment = document.createDocumentFragment();
 
-    for (const offerFeature of object.offer.features) {
+    object.offer.features.forEach((offerFeature) => {
       const feature = featureTemplate.cloneNode(true);
       feature.className = `popup__feature popup__feature--${offerFeature}`;
       fragment.appendChild(feature);
-    }
+    });
 
     featuresBlock.appendChild(fragment);
   } else {
@@ -94,11 +95,11 @@ const create = function (object) {
     photosBlock.innerHTML = ``;
     const fragment = document.createDocumentFragment();
 
-    for (const offerPhoto of object.offer.photos) {
+    object.offer.photos.forEach((offerPhoto) => {
       const photo = photoTemplate.cloneNode(true);
       photo.src = offerPhoto;
       fragment.appendChild(photo);
-    }
+    });
 
     photosBlock.appendChild(fragment);
   } else {
@@ -112,7 +113,7 @@ const create = function (object) {
   }
 
   const closeButton = card.querySelector(`.popup__close`);
-  closeButton.addEventListener(`click`, function () {
+  closeButton.addEventListener(`click`, () => {
     hide();
   });
 
@@ -120,13 +121,13 @@ const create = function (object) {
 };
 
 
-const show = function (object) {
+const show = (object) => {
   map.insertBefore(create(object), filtersContainer);
   document.addEventListener(`keydown`, onDocumentKeydown);
 };
 
 
-const hide = function () {
+const hide = () => {
   const card = map.querySelector(`.map__card`);
 
   if (card) {
@@ -137,7 +138,7 @@ const hide = function () {
 };
 
 
-const onDocumentKeydown = function (evt) {
+const onDocumentKeydown = (evt) => {
   if (evt.key === `Escape`) {
     hide();
   }

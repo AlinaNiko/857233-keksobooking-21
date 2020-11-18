@@ -17,7 +17,8 @@ const timeOut = adForm.querySelector(`#timeout`);
 const roomNumber = adForm.querySelector(`#room_number`);
 const capacity = adForm.querySelector(`#capacity`);
 
-title.addEventListener(`input`, function () {
+
+title.addEventListener(`input`, () => {
   const titleValueLength = title.value.length;
 
   if (titleValueLength < title.getAttribute(`minlength`)) {
@@ -28,8 +29,7 @@ title.addEventListener(`input`, function () {
   title.reportValidity();
 });
 
-
-const setPriceValue = function () {
+const setPriceValue = () => {
   let value;
 
   if (type.value === `bungalow`) {
@@ -46,8 +46,7 @@ const setPriceValue = function () {
   price.placeholder = value;
 };
 
-
-const setPriceValidation = function () {
+const setPriceValidation = () => {
   let message = ``;
 
   if (price.validity.valueMissing) {
@@ -64,32 +63,29 @@ const setPriceValidation = function () {
   price.reportValidity();
 };
 
-
 setPriceValue();
 
-
-type.addEventListener(`change`, function () {
+type.addEventListener(`change`, () => {
   setPriceValue();
   setPriceValidation();
 });
 
 
-price.addEventListener(`input`, function () {
+price.addEventListener(`input`, () => {
   setPriceValidation();
 });
 
-
-timeIn.addEventListener(`change`, function () {
+timeIn.addEventListener(`change`, () => {
   timeOut.value = timeIn.value;
 });
 
 
-timeOut.addEventListener(`change`, function () {
+timeOut.addEventListener(`change`, () => {
   timeIn.value = timeOut.value;
 });
 
 
-const getErrorMessage = function (roomsField, guestsField) {
+const getErrorMessage = (roomsField, guestsField) => {
   const rooms = Number(roomsField.value);
   const guests = Number(guestsField.value);
 
@@ -103,7 +99,7 @@ const getErrorMessage = function (roomsField, guestsField) {
 };
 
 
-roomNumber.addEventListener(`change`, function () {
+roomNumber.addEventListener(`change`, () => {
   roomNumber.setCustomValidity(``);
   capacity.setCustomValidity(``);
 
@@ -113,11 +109,9 @@ roomNumber.addEventListener(`change`, function () {
   roomNumber.reportValidity();
 });
 
-
 capacity.setCustomValidity(getErrorMessage(roomNumber, capacity));
 
-
-capacity.addEventListener(`change`, function () {
+capacity.addEventListener(`change`, () => {
   roomNumber.setCustomValidity(``);
   capacity.setCustomValidity(``);
 
@@ -130,20 +124,20 @@ capacity.addEventListener(`change`, function () {
 
 const resetButton = adForm.querySelector(`.ad-form__reset`);
 
-resetButton.addEventListener(`click`, function (evt) {
+resetButton.addEventListener(`click`, (evt) => {
   evt.preventDefault();
   adForm.reset();
   window.mode.switchOffActive();
 });
 
 
-const enable = function () {
+const enable = () => {
   adForm.classList.remove(`ad-form--disabled`);
   window.main.setChildrenDisabled(adForm, false);
 };
 
 
-const disable = function () {
+const disable = () => {
   adForm.reset();
   adForm.classList.add(`ad-form--disabled`);
   window.main.setChildrenDisabled(adForm, true);
@@ -152,18 +146,18 @@ const disable = function () {
 };
 
 
-const setAddress = function (x, y) {
+const setAddress = (x, y) => {
   address.value = `${Math.round(x)}, ${Math.round(y)}`;
 };
 
 
-adForm.addEventListener(`submit`, function (evt) {
+adForm.addEventListener(`submit`, (evt) => {
   evt.preventDefault();
   window.server.upload(new FormData(adForm), onSuccess, onError);
 });
 
 
-const onSuccess = function () {
+const onSuccess = () => {
   window.mode.switchOffActive();
   window.images.reset();
   window.message.showSuccess();
@@ -171,7 +165,7 @@ const onSuccess = function () {
 };
 
 
-const onError = function (error) {
+const onError = (error) => {
   window.message.showError(error);
 };
 

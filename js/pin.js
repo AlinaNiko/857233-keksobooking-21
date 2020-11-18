@@ -2,7 +2,7 @@
 
 const template = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
-const create = function (object) {
+const create = (object) => {
   const pin = template.cloneNode(true);
   const image = pin.querySelector(`img`);
 

@@ -13,11 +13,11 @@ const StatusCode = {
 };
 
 
-const createXHR = function (onSuccess, onError) {
+const createXHR = (onSuccess, onError) => {
   const xhr = new XMLHttpRequest();
 
   xhr.responseType = `json`;
-  xhr.addEventListener(`load`, function () {
+  xhr.addEventListener(`load`, () => {
     if (xhr.status === StatusCode.OK) {
       onSuccess(xhr.response);
     } else {
@@ -25,11 +25,11 @@ const createXHR = function (onSuccess, onError) {
     }
   });
 
-  xhr.addEventListener(`error`, function () {
+  xhr.addEventListener(`error`, () => {
     onError(`Произошла ошибка соединения`);
   });
 
-  xhr.addEventListener(`timeout`, function () {
+  xhr.addEventListener(`timeout`, () => {
     onError(`Запрос не успел выполниться за ${xhr.timeout} мс`);
   });
 
@@ -39,7 +39,7 @@ const createXHR = function (onSuccess, onError) {
 };
 
 
-const load = function (onSuccess, onError) {
+const load = (onSuccess, onError) => {
   const xhr = createXHR(onSuccess, onError);
 
   xhr.open(`GET`, Url.LOAD);
@@ -47,7 +47,7 @@ const load = function (onSuccess, onError) {
 };
 
 
-const upload = function (data, onSuccess, onError) {
+const upload = (data, onSuccess, onError) => {
   const xhr = createXHR(onSuccess, onError);
 
   xhr.open(`POST`, Url.UPLOAD);

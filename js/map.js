@@ -6,10 +6,8 @@ const pinsBlock = map.querySelector(`.map__pins`);
 
 let offers = [];
 
-const showPins = function (array) {
-  offers = array.filter(function (object) {
-    return object.offer;
-  });
+const showPins = (array) => {
+  offers = array.filter((object) => object.offer);
 
   const offersSize = Math.min(offers.length, MAX_OFFERS_AMOUNT);
   const fragment = document.createDocumentFragment();
@@ -25,27 +23,27 @@ const showPins = function (array) {
 };
 
 
-const hidePins = function () {
+const hidePins = () => {
   const pins = pinsBlock.querySelectorAll(`.map__pin:not(.map__pin--main)`);
 
-  for (let pin of pins) {
+  pins.forEach((pin) => {
     pin.remove();
-  }
+  });
 };
 
 
-const disable = function () {
+const disable = () => {
   map.classList.add(`map--faded`);
   hidePins();
 };
 
 
-const enable = function () {
+const enable = () => {
   map.classList.remove(`map--faded`);
 };
 
 
-const unactivatePin = function () {
+const unactivatePin = () => {
   const activePin = pinsBlock.querySelector(`.map__pin--active`);
 
   if (activePin) {
@@ -54,12 +52,12 @@ const unactivatePin = function () {
 };
 
 
-const activatePin = function (pin) {
+const activatePin = (pin) => {
   pin.classList.add(`map__pin--active`);
 };
 
 
-pinsBlock.addEventListener(`click`, function (evt) {
+pinsBlock.addEventListener(`click`, (evt) => {
   unactivatePin();
   const eventTarget = evt.target.closest(`.map__pin:not(.map__pin--main)`);
 
