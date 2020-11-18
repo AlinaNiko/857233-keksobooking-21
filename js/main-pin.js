@@ -20,13 +20,13 @@ const Center = {
 const map = document.querySelector(`.map`);
 const main = map.querySelector(`.map__pin--main`);
 
-const setPosition = function (x, y) {
+const setPosition = (x, y) => {
   main.style.left = `${x - ActiveSize.WIDTH / 2}px`;
   main.style.top = `${y - ActiveSize.HEIGHT}px`;
 };
 
 
-const getPosition = function () {
+const getPosition = () => {
   return {
     x: main.offsetLeft + ActiveSize.WIDTH / 2,
     y: main.offsetTop + ActiveSize.HEIGHT
@@ -34,13 +34,13 @@ const getPosition = function () {
 };
 
 
-const setCenterPosition = function () {
+const setCenterPosition = () => {
   main.style.left = `${Center.LEFT}px`;
   main.style.top = `${Center.TOP}px`;
 };
 
 
-const getCenterPosition = function () {
+const getCenterPosition = () => {
   return {
     x: Center.LEFT + main.offsetWidth / 2,
     y: Center.TOP + main.offsetHeight / 2
@@ -48,7 +48,7 @@ const getCenterPosition = function () {
 };
 
 
-main.addEventListener(`mousedown`, function (evt) {
+main.addEventListener(`mousedown`, (evt) => {
   evt.preventDefault();
 
   if (evt.button === 0) {
@@ -61,7 +61,7 @@ main.addEventListener(`mousedown`, function (evt) {
 
   let dragged = false;
 
-  const onMouseMove = function (moveEvt) {
+  const onMouseMove = (moveEvt) => {
     moveEvt.preventDefault();
 
     const shiftX = moveEvt.clientX - startX;
@@ -81,11 +81,11 @@ main.addEventListener(`mousedown`, function (evt) {
     dragged = true;
   };
 
-  const onMouseUp = function (upEvt) {
+  const onMouseUp = (upEvt) => {
     upEvt.preventDefault();
 
     if (!dragged) {
-      const onMouseClick = function (clickEvt) {
+      const onMouseClick = (clickEvt) => {
         clickEvt.preventDefault();
         setPosition(startPosition.x, startPosition.y);
         window.form.setAddress(startPosition.x, startPosition.y);
@@ -104,13 +104,7 @@ main.addEventListener(`mousedown`, function (evt) {
 });
 
 
-main.addEventListener(`click`, function (evt) {
-  evt.preventDefault();
-  window.mode.switchOnActive();
-});
-
-
-const onMainKeyDown = function (evt) {
+const onMainKeyDown = (evt) => {
   evt.preventDefault();
   if (evt.key === `Enter`) {
     const startPosition = getPosition();

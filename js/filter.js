@@ -12,12 +12,9 @@ const rooms = form.querySelector(`#housing-rooms`);
 const guests = form.querySelector(`#housing-guests`);
 const featuresField = form.querySelector(`#housing-features`);
 
-const checkType = function (item) {
-  return (type.value === `any`) ? true : item.offer.type === type.value;
-};
+const checkType = (item) => (type.value === `any`) ? true : item.offer.type === type.value;
 
-
-const getPriceName = function (item) {
+const getPriceName = (item) => {
   if (item.offer.price >= PriceRange.LOWER_LIMIT && item.offer.price <= PriceRange.UPPER_LIMIT) {
     return `middle`;
   } else if (item.offer.price < PriceRange.LOWER_LIMIT) {
@@ -29,23 +26,14 @@ const getPriceName = function (item) {
   }
 };
 
+const checkPrice = (item) => (price.value === `any`) ? true : getPriceName(item) === price.value;
 
-const checkPrice = function (item) {
-  return (price.value === `any`) ? true : getPriceName(item) === price.value;
-};
+const checkRooms = (item) => (rooms.value === `any`) ? true : String(item.offer.rooms) === rooms.value;
 
-
-const checkRooms = function (item) {
-  return (rooms.value === `any`) ? true : String(item.offer.rooms) === rooms.value;
-};
+const checkGuests = (item) => (guests.value === `any`) ? true : String(item.offer.guests) === guests.value;
 
 
-const checkGuests = function (item) {
-  return (guests.value === `any`) ? true : String(item.offer.guests) === guests.value;
-};
-
-
-const checkFeature = function (item) {
+const checkFeature = (item) => {
   const features = featuresField.querySelectorAll(`input:checked`);
 
   if (features.length === 0) {
@@ -62,14 +50,10 @@ const checkFeature = function (item) {
 };
 
 
-const apply = function (offers) {
-  return offers.filter(function (item) {
-    return checkType(item) && checkPrice(item) && checkRooms(item) && checkGuests(item) && checkFeature(item);
-  });
-};
+const apply = (offers) => offers.filter((item) => checkType(item) && checkPrice(item) && checkRooms(item) && checkGuests(item) && checkFeature(item));
 
 
-const updateOffers = function () {
+const updateOffers = () => {
   const filteredOffers = apply(window.mode.getLoadedOffers());
 
   window.card.hide();
@@ -80,14 +64,12 @@ const updateOffers = function () {
 
 form.addEventListener(`change`, window.debounce(updateOffers));
 
-
-const disable = function () {
+const disable = () => {
   form.reset();
   window.main.setChildrenDisabled(form, true);
 };
 
-
-const enable = function () {
+const enable = () => {
   window.main.setChildrenDisabled(form, false);
 };
 

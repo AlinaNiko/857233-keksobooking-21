@@ -1,11 +1,11 @@
 "use strict";
 
-const setChildrenDisabled = function (element, boolean) {
+const setChildrenDisabled = (element, boolean) => {
   const children = element.children;
 
-  for (let child of children) {
+  Array.from(children).forEach((child) => {
     child.disabled = boolean;
-  }
+  });
 };
 
 

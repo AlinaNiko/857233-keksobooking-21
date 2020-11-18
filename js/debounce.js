@@ -2,15 +2,15 @@
 
 const DEBOUNCE_INTERVAL = 500;
 
-window.debounce = function (callback) {
+window.debounce = (callback) => {
   let lastTimeout = null;
 
-  return function (...parameters) {
+  return (...parameters) => {
     if (lastTimeout) {
       window.clearTimeout(lastTimeout);
     }
 
-    lastTimeout = window.setTimeout(function () {
+    lastTimeout = window.setTimeout(() => {
       callback(...parameters);
     }, DEBOUNCE_INTERVAL);
   };
